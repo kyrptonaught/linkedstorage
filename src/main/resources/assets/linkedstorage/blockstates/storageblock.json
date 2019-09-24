@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "linkedstorage:block/storageblock"
+    }
+  }
+}
