@@ -2,6 +2,13 @@
   "container.linkedstorage": "Linked Storage: %s",
   "text.linkedstorage.copied": "Copied Storage link: %s",
   "text.linkedstorage.set": "Set Storage to: %s",
+  "text.linkedstorage.nochannel": "Item not linked to channel",
   "item.linkedstorage.storageitem": "Handheld Storage",
-  "block.linkedstorage.storageblock": "Storage Block"
+  "block.linkedstorage.storageblock": "Storage Block",
+  "item.linkedstorage.linkingcard": "Linking Card",
+  "text.linkingcard.1": "Used for linking multiple StorageBlocks and",
+  "text.linkingcard.2": "HandHeld Storages in off-hand together",
+  "text.linkingcard.3": "Shift click a block to copy",
+  "text.linkingcard.4": "Non shift click to set",
+  "text.linkingcard.channel": "Channel: %s"
 }

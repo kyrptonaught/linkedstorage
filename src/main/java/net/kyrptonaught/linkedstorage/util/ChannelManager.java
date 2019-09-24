@@ -1,28 +1,31 @@
 package net.kyrptonaught.linkedstorage.util;
 
 import net.kyrptonaught.linkedstorage.LinkedInventory;
+import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.DefaultedList;
+import net.minecraft.world.World;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.HashMap;
 
-public class StorageManager implements StorageManagerComponent {
+public class ChannelManager implements StorageManagerComponent {
     private HashMap<String, LinkedInventory> inventories = new HashMap<>();
 
     @Override
-    public StorageManager getValue() {
+    public ChannelManager getValue() {
         return this;
     }
 
-    public static String getRandomKey() {
+    public static String getRandomKey(World world) {
         String key;
-        //do {
-        key = RandomStringUtils.randomAlphanumeric(7);
-        // } while (LinkedStorageMod.SMAN.get().containsKey(key));
+        ChannelManager cman = LinkedStorageMod.CMAN.get(world.getLevelProperties()).getValue();
+        do {
+            key = RandomStringUtils.randomAlphanumeric(7, 10);
+        } while (cman.inventories.containsKey(key));
         return key;
     }
 

@@ -2,7 +2,7 @@ package net.kyrptonaught.linkedstorage.item;
 
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
-import net.kyrptonaught.linkedstorage.util.StorageManager;
+import net.kyrptonaught.linkedstorage.util.ChannelManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,12 +24,16 @@ public class StorageItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
         ItemStack stack = playerEntity.getStackInHand(hand);
         if (!world.isClient && !playerEntity.isSneaking()) {
-            CompoundTag tag = stack.getOrCreateTag();
-            if (!tag.containsKey("channel"))
-                tag.putString("channel", StorageManager.getRandomKey());
-            String channel = tag.getString("channel");
+            String channel = getChannel(stack, world);
             ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), playerEntity, (buf) -> buf.writeString(channel));
         }
         return new TypedActionResult<>(ActionResult.SUCCESS, stack);
+    }
+
+    public static String getChannel(ItemStack stack, World world) {
+        CompoundTag tag = stack.getOrCreateTag();
+        if (!tag.containsKey("channel"))
+            tag.putString("channel", ChannelManager.getRandomKey(world));
+        return tag.getString("channel");
     }
 }

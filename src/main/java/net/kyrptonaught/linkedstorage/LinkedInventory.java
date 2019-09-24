@@ -6,7 +6,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 
 public class LinkedInventory extends BasicInventory implements SidedInventory {
-    int channel = 0;
 
     public LinkedInventory() {
         super(27);

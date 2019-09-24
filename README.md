@@ -1,2 +1,2 @@
-# Diggus Maximus
-Dig more better!
+# Linked Storage
+Linkable storage's!
