@@ -7,19 +7,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.DefaultedList;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class StorageManager implements StorageManagerComponent {
-    private HashMap<Integer, LinkedInventory> inventories = new HashMap<>();
+    private HashMap<String, LinkedInventory> inventories = new HashMap<>();
 
     @Override
     public StorageManager getValue() {
         return this;
     }
 
-    public LinkedInventory getInv(int channel) {
+    public LinkedInventory getInv(String channel) {
         if (!inventories.containsKey(channel))
             inventories.put(channel, new LinkedInventory());
         return inventories.get(channel);
@@ -27,21 +25,18 @@ public class StorageManager implements StorageManagerComponent {
 
     @Override
     public void fromTag(CompoundTag tag) {
-        int[] channels = tag.getIntArray("channels");
         inventories.clear();
         CompoundTag invs = tag.getCompound("invs");
-        for (int inv : channels) {
-            inventories.put(inv, fromList(invs.getCompound("inv" + inv)));
+        for (String key : invs.getKeys()) {
+            inventories.put(key, fromList(invs.getCompound(key)));
         }
     }
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        List<Integer> channels = new ArrayList<>(inventories.keySet());
-        tag.putIntArray("channels", channels);
         CompoundTag invs = new CompoundTag();
-        for (Integer inv : channels) {
-            invs.put("inv" + inv, Inventories.toTag(new CompoundTag(), toList(inventories.get(inv))));
+        for (String key : inventories.keySet()) {
+            invs.put(key, Inventories.toTag(new CompoundTag(), toList(inventories.get(key))));
         }
         tag.put("invs", invs);
         return tag;
@@ -54,7 +49,7 @@ public class StorageManager implements StorageManagerComponent {
         return stacks;
     }
 
-    public LinkedInventory fromList(CompoundTag tag) {
+    private LinkedInventory fromList(CompoundTag tag) {
         LinkedInventory inventory = new LinkedInventory();
         DefaultedList<ItemStack> stacks = DefaultedList.ofSize(inventory.getInvSize(), ItemStack.EMPTY);
         Inventories.fromTag(tag, stacks);

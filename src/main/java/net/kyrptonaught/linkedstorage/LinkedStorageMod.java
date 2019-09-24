@@ -12,7 +12,7 @@ import net.kyrptonaught.linkedstorage.item.StorageItem;
 import net.kyrptonaught.linkedstorage.util.StorageManager;
 import net.kyrptonaught.linkedstorage.util.StorageManagerComponent;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.Material;
 import net.minecraft.container.Container;
 import net.minecraft.container.GenericContainer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,17 +28,21 @@ public class LinkedStorageMod implements ModInitializer, ClientModInitializer {
     @Override
     public void onInitialize() {
         LevelComponentCallback.EVENT.register((levelProperties, components) -> components.put(SMAN, new StorageManager()));
-        new StorageBlock(Block.Settings.copy(Blocks.ENDER_CHEST));
+        new StorageBlock(Block.Settings.of(Material.METAL).strength(2.5f, 2.5f));
         new StorageItem(new Item.Settings().group(ItemGroup.REDSTONE));
-        ContainerProviderRegistry.INSTANCE.registerFactory(new Identifier(MOD_ID, "linkedstorage"), (syncId, id, player, buf) -> createContainer(syncId, player, buf.readInt()));
+        ContainerProviderRegistry.INSTANCE.registerFactory(new Identifier(MOD_ID, "linkedstorage"), (syncId, id, player, buf) -> getContainer(syncId, player, buf.readString()));
     }
 
     @Override
     public void onInitializeClient() {
-        ScreenProviderRegistry.INSTANCE.registerFactory(new Identifier(MOD_ID, "linkedstorage"), (syncId, identifier, player, buf) -> new StorageContainerScreen(createContainer(syncId, player,buf.readInt()), player.inventory));
+        ScreenProviderRegistry.INSTANCE.registerFactory(new Identifier(MOD_ID, "linkedstorage"), (syncId, identifier, player, buf) ->
+        {
+            String channel = buf.readString();
+            return new StorageContainerScreen(getContainer(syncId, player, channel), player.inventory, channel);
+        });
     }
 
-    public Container createContainer(int id, PlayerEntity player, int channel) {
+    private Container getContainer(int id, PlayerEntity player, String channel) {
         return GenericContainer.createGeneric9x3(id, player.inventory, SMAN.get(player.getEntityWorld().getLevelProperties()).getValue().getInv(channel));
     }
 }
