@@ -4,11 +4,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
-import net.kyrptonaught.linkedstorage.item.StorageItem;
-import net.minecraft.block.*;
+import net.kyrptonaught.linkedstorage.item.LinkingCard;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockEntityProvider;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.InventoryProvider;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SidedInventory;
@@ -17,7 +19,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -45,10 +46,13 @@ public class StorageBlock extends Block implements BlockEntityProvider, Inventor
     @Override
     public boolean activate(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
         if (!world.isClient) {
-            String channel = getChannel(world, pos);
-            ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), player, (buf) -> {
-                buf.writeString(channel);
-            });
+            ItemStack stack = player.inventory.getMainHandStack();
+            if (stack.getItem() instanceof LinkingCard) {
+                ((LinkingCard) stack.getItem()).useOnStorageBlock(stack, (StorageBlockEntity) world.getBlockEntity(pos), player);
+            } else {
+                String channel = getChannel(world, pos);
+                ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), player, (buf) -> buf.writeString(channel));
+            }
         }
         return true;
     }

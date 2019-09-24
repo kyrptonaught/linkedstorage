@@ -1,6 +1,7 @@
 {
   "container.linkedstorage": "Linked Storage: %s",
   "text.linkedstorage.copied": "Copied Storage link: %s",
+  "text.linkedstorage.set": "Set Storage to: %s",
   "item.linkedstorage.storageitem": "Handheld Storage",
   "block.linkedstorage.storageblock": "Storage Block"
 }

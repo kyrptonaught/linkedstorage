@@ -2,14 +2,11 @@ package net.kyrptonaught.linkedstorage.item;
 
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
-import net.kyrptonaught.linkedstorage.block.StorageBlockEntity;
-import net.minecraft.block.entity.BlockEntity;
+import net.kyrptonaught.linkedstorage.util.StorageManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -24,25 +21,13 @@ public class StorageItem extends Item {
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        if (context.getPlayer().isSneaking()) {
-            BlockEntity be = context.getWorld().getBlockEntity(context.getBlockPos());
-            if (be instanceof StorageBlockEntity) {
-                String channel = ((StorageBlockEntity) be).getChannel();
-                if (!channel.equals("")) {
-                    context.getPlayer().inventory.getMainHandStack().setCustomName(new LiteralText(channel));
-                    context.getPlayer().addChatMessage(new TranslatableText("text.linkedstorage.copied", channel), false);
-                }
-            }
-        }
-        return ActionResult.PASS;
-    }
-
-    @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
         ItemStack stack = playerEntity.getStackInHand(hand);
         if (!world.isClient && !playerEntity.isSneaking()) {
-            String channel = stack.hasCustomName() ? stack.getName().asFormattedString() : "";
+            CompoundTag tag = stack.getOrCreateTag();
+            if (!tag.containsKey("channel"))
+                tag.putString("channel", StorageManager.getRandomKey());
+            String channel = tag.getString("channel");
             ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), playerEntity, (buf) -> buf.writeString(channel));
         }
         return new TypedActionResult<>(ActionResult.SUCCESS, stack);

@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 

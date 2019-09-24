@@ -6,6 +6,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.DefaultedList;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.HashMap;
 
@@ -15,6 +16,14 @@ public class StorageManager implements StorageManagerComponent {
     @Override
     public StorageManager getValue() {
         return this;
+    }
+
+    public static String getRandomKey() {
+        String key;
+        //do {
+        key = RandomStringUtils.randomAlphanumeric(7);
+        // } while (LinkedStorageMod.SMAN.get().containsKey(key));
+        return key;
     }
 
     public LinkedInventory getInv(String channel) {
@@ -36,7 +45,8 @@ public class StorageManager implements StorageManagerComponent {
     public CompoundTag toTag(CompoundTag tag) {
         CompoundTag invs = new CompoundTag();
         for (String key : inventories.keySet()) {
-            invs.put(key, Inventories.toTag(new CompoundTag(), toList(inventories.get(key))));
+            if (!inventories.get(key).isInvEmpty())
+                invs.put(key, Inventories.toTag(new CompoundTag(), toList(inventories.get(key))));
         }
         tag.put("invs", invs);
         return tag;
