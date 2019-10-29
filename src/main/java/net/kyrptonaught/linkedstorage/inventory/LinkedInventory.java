@@ -1,4 +1,4 @@
-package net.kyrptonaught.linkedstorage;
+package net.kyrptonaught.linkedstorage.inventory;
 
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.inventory.SidedInventory;

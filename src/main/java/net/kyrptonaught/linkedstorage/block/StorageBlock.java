@@ -2,20 +2,22 @@ package net.kyrptonaught.linkedstorage.block;
 
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
-import net.kyrptonaught.linkedstorage.item.LinkingCard;
-import net.kyrptonaught.linkedstorage.util.ChannelManager;
+import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
+import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.InventoryProvider;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -35,24 +37,24 @@ public class StorageBlock extends Block implements BlockEntityProvider, Inventor
         blockEntity = Registry.register(Registry.BLOCK_ENTITY, LinkedStorageMod.MOD_ID + ":storageblock", BlockEntityType.Builder.create(StorageBlockEntity::new, this).build(null));
     }
 
-    public static String getChannelForBE(World world, BlockPos pos) {
-        StorageBlockEntity sbe = (StorageBlockEntity) world.getBlockEntity(pos);
-        if (!sbe.hasChannel()) sbe.setChannel(ChannelManager.getRandomKey(world));
-        return sbe.getChannel();
-    }
-
     @Override
     public boolean activate(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
         if (!world.isClient) {
             ItemStack stack = player.inventory.getMainHandStack();
-            if (stack.getItem() instanceof LinkingCard) {
-                ((LinkingCard) stack.getItem()).useOnStorageBlock(stack, (StorageBlockEntity) world.getBlockEntity(pos), player);
+            if (stack.getItem() instanceof LinkedInventoryProvider) {
+                String channel = LinkedInventoryHelper.getBlockChannel(world, pos);
+                LinkedInventoryHelper.setItemChannel(channel, stack);
+                player.addChatMessage(new TranslatableText("text.linkedstorage.copied", channel), false);
             } else {
-                String channel = getChannelForBE(world, pos);
-                ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), player, (buf) -> buf.writeString(channel));
+                ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), player, (buf) -> buf.writeString(LinkedInventoryHelper.getBlockChannel(world, pos)));
             }
         }
         return true;
+    }
+
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState blockState_1, LivingEntity livingEntity_1, ItemStack itemStack_1) {
+        LinkedInventoryHelper.setBlockChannel(livingEntity_1.getEntityName(), world, pos);
     }
 
     @Override
@@ -62,6 +64,6 @@ public class StorageBlock extends Block implements BlockEntityProvider, Inventor
 
     @Override
     public SidedInventory getInventory(BlockState var1, IWorld var2, BlockPos var3) {
-        return LinkedStorageMod.CMAN.get(var2.getLevelProperties()).getValue().getInv(getChannelForBE((World) var2, var3));
+        return LinkedStorageMod.CMAN.get(var2.getLevelProperties()).getValue().getInv(LinkedInventoryHelper.getBlockChannel((World) var2, var3));
     }
 }

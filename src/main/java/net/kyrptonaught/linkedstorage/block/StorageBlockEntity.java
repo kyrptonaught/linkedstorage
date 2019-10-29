@@ -31,9 +31,10 @@ public class StorageBlockEntity extends BlockEntity implements BlockEntityClient
         return compoundTag_1;
     }
 
-    boolean hasChannel(){
+    boolean hasChannel() {
         return !channel.equals("");
     }
+
     public void setChannel(String channel) {
         this.channel = channel;
         this.markDirty();

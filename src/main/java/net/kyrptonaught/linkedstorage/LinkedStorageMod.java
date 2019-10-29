@@ -8,6 +8,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.kyrptonaught.linkedstorage.block.StorageBlock;
+import net.kyrptonaught.linkedstorage.client.StorageContainerScreen;
 import net.kyrptonaught.linkedstorage.item.LinkingCard;
 import net.kyrptonaught.linkedstorage.item.StorageItem;
 import net.kyrptonaught.linkedstorage.util.ChannelManager;
@@ -33,6 +34,7 @@ public class LinkedStorageMod implements ModInitializer, ClientModInitializer {
         new StorageItem(new Item.Settings().group(ItemGroup.REDSTONE));
         new LinkingCard(new Item.Settings().group(ItemGroup.REDSTONE));
         ContainerProviderRegistry.INSTANCE.registerFactory(new Identifier(MOD_ID, "linkedstorage"), (syncId, id, player, buf) -> getContainer(syncId, player, buf.readString()));
+        LinkingCardRenamePacket.registerReceivePacket();
     }
 
     @Override

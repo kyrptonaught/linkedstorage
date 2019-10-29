@@ -1,14 +1,11 @@
 package net.kyrptonaught.linkedstorage.util;
 
-import net.kyrptonaught.linkedstorage.LinkedInventory;
-import net.kyrptonaught.linkedstorage.LinkedStorageMod;
+import net.kyrptonaught.linkedstorage.inventory.LinkedInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.DefaultedList;
-import net.minecraft.world.World;
-import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.HashMap;
 
@@ -18,15 +15,6 @@ public class ChannelManager implements StorageManagerComponent {
     @Override
     public ChannelManager getValue() {
         return this;
-    }
-
-    public static String getRandomKey(World world) {
-        String key;
-        ChannelManager cman = LinkedStorageMod.CMAN.get(world.getLevelProperties()).getValue();
-        do {
-            key = RandomStringUtils.randomAlphanumeric(7, 10);
-        } while (cman.inventories.containsKey(key));
-        return key;
     }
 
     public LinkedInventory getInv(String channel) {

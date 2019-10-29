@@ -34,8 +34,10 @@ dependencies {
 
 	modApi "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-base:+"
 	modApi "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-level:+"
+	modApi "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-world:+"
 	include "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-base:+"
 	include "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-level:+"
+	include "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-world:+"
 }
 
 processResources {
