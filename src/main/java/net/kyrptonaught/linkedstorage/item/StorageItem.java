@@ -24,7 +24,7 @@ public class StorageItem extends Item {
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-        if (!context.getWorld().isClient && context.isPlayerSneaking()) {
+        if (!context.getWorld().isClient && context.getPlayer().isSneaking()) {
             String channel = LinkedInventoryHelper.getBlockChannel(context.getWorld(), context.getBlockPos());
             LinkedInventoryHelper.setItemChannel(channel, context.getStack());
             context.getPlayer().addChatMessage(new TranslatableText("text.linkedstorage.set", channel), false);
@@ -44,7 +44,7 @@ public class StorageItem extends Item {
 
     public static String getChannel(ItemStack stack, PlayerEntity playerEntity) {
         CompoundTag tag = stack.getOrCreateTag();
-        if (!tag.containsKey("channel"))
+        if (!tag.contains("channel"))
             tag.putString("channel", playerEntity.getEntityName());
         return tag.getString("channel");
     }

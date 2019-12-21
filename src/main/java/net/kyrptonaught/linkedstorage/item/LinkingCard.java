@@ -28,7 +28,7 @@ public class LinkingCard extends Item implements LinkedInventoryProvider {
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-        if (!context.getWorld().isClient && context.isPlayerSneaking() && LinkedInventoryHelper.itemHasChannel(context.getStack())) {
+        if (!context.getWorld().isClient && context.getPlayer().isSneaking() && LinkedInventoryHelper.itemHasChannel(context.getStack())) {
             String channel = LinkedInventoryHelper.getItemChannel(context.getStack());
             LinkedInventoryHelper.setBlockChannel(channel, context.getWorld(), context.getBlockPos());
             context.getPlayer().addChatMessage(new TranslatableText("text.linkedstorage.set", channel), false);

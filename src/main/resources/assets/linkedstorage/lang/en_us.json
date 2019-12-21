@@ -6,9 +6,9 @@
   "item.linkedstorage.storageitem": "Handheld Storage",
   "block.linkedstorage.storageblock": "Storage Block",
   "item.linkedstorage.linkingcard": "Linking Card",
-  "text.linkingcard.1": "Links StorageBlocks together",
+  "text.linkingcard.1": "Links Storage Blocks together",
   "text.linkingcard.2": "Right click to open GUI",
-  "text.linkingcard.3": "R-Click a block to set channel",
-  "text.linkingcard.4": "Shift R-Click a block to copy",
+  "text.linkingcard.3": "R-Click a block to copy channel",
+  "text.linkingcard.4": "Shift R-Click a block to set",
   "text.linkingcard.channel": "Currently set to: %s"
 }

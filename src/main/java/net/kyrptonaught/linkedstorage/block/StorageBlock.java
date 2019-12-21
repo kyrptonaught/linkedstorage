@@ -18,6 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -33,12 +34,12 @@ public class StorageBlock extends Block implements BlockEntityProvider, Inventor
     public StorageBlock(Settings block$Settings_1) {
         super(block$Settings_1);
         Registry.register(Registry.BLOCK, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), this);
-        Registry.register(Registry.ITEM, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), new BlockItem(this, new Item.Settings().group(ItemGroup.REDSTONE)));
+        Registry.register(Registry.ITEM, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), new BlockItem(this, new Item.Settings().group(LinkedStorageMod.modItemGroup)));
         blockEntity = Registry.register(Registry.BLOCK_ENTITY, LinkedStorageMod.MOD_ID + ":storageblock", BlockEntityType.Builder.create(StorageBlockEntity::new, this).build(null));
     }
 
     @Override
-    public boolean activate(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient) {
             ItemStack stack = player.inventory.getMainHandStack();
             if (stack.getItem() instanceof LinkedInventoryProvider) {
@@ -49,7 +50,7 @@ public class StorageBlock extends Block implements BlockEntityProvider, Inventor
                 ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), player, (buf) -> buf.writeString(LinkedInventoryHelper.getBlockChannel(world, pos)));
             }
         }
-        return true;
+        return ActionResult.SUCCESS;
     }
 
     @Override

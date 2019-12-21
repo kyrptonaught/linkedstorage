@@ -11,7 +11,7 @@ import net.minecraft.text.Text;
 
 public class LinkingCardScreen extends Screen {
     private TextFieldWidget nameField;
-    ItemStack item;
+    private ItemStack item;
 
     public LinkingCardScreen(Text text_1, ItemStack stack) {
         super(text_1);
@@ -23,7 +23,7 @@ public class LinkingCardScreen extends Screen {
         this.minecraft.keyboard.enableRepeatEvents(true);
         this.nameField = new TextFieldWidget(this.font, this.width / 2, this.height / 2, 103, 12, I18n.translate("container.repair"));
         this.nameField.setText(LinkedInventoryHelper.getItemChannel(item));
-        this.nameField.method_1856(false);
+        this.nameField.setFocusUnlocked(false);
         this.nameField.changeFocus(true);
         this.nameField.setEditableColor(-1);
         this.nameField.setUneditableColor(-1);
@@ -38,12 +38,12 @@ public class LinkingCardScreen extends Screen {
         LinkingCardRenamePacket.sendPacket(string_1);
     }
 
-    public boolean keyPressed(int int_1, int int_2, int int_3) {
-        if (int_1 == 256) {
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == 256) {
             this.minecraft.player.closeContainer();
-            return true;
         }
-        return this.nameField.keyPressed(int_1, int_2, int_3) || this.nameField.method_20315() || super.keyPressed(int_1, int_2, int_3);
+
+        return this.nameField.keyPressed(keyCode, scanCode, modifiers) || this.nameField.isActive() || super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     public void render(int int_1, int int_2, float float_1) {

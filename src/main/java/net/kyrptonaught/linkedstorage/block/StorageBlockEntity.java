@@ -19,7 +19,7 @@ public class StorageBlockEntity extends BlockEntity implements BlockEntityClient
 
     public void fromTag(CompoundTag compoundTag_1) {
         super.fromTag(compoundTag_1);
-        if (compoundTag_1.containsKey("channel"))
+        if (compoundTag_1.contains("channel"))
             this.channel = compoundTag_1.getString("channel");
         this.markDirty();
     }

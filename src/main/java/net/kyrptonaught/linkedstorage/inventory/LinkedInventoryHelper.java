@@ -27,6 +27,6 @@ public class LinkedInventoryHelper {
     }
 
     public static Boolean itemHasChannel(ItemStack stack) {
-        return stack.getOrCreateTag().containsKey("channel");
+        return stack.getOrCreateTag().contains("channel");
     }
 }
