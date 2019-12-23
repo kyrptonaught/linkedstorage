@@ -1,18 +1,18 @@
 {
   "variants": {
     "facing=north": {
-      "model": "linkedstorage:block/storageblock"
+      "model": "linkedstorage:block/storageblock_headless"
     },
     "facing=east": {
-      "model": "linkedstorage:block/storageblock",
+      "model": "linkedstorage:block/storageblock_headless",
       "y": 90
     },
     "facing=south": {
-      "model": "linkedstorage:block/storageblock",
+      "model": "linkedstorage:block/storageblock_headless",
       "y": 180
     },
     "facing=west": {
-      "model": "linkedstorage:block/storageblock",
+      "model": "linkedstorage:block/storageblock_headless",
       "y": 270
     }
   }

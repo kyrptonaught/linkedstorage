@@ -25,6 +25,7 @@ dependencies {
 	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	//modImplementation "io.github.prospector.modmenu:ModMenu:+"
+	modImplementation "me.shedaniel:RoughlyEnoughItems:+"
 
 	//modImplementation ('me.shedaniel.cloth:config-2:+'){transitive = false}
 	//include 'me.shedaniel.cloth:config-2:+'
