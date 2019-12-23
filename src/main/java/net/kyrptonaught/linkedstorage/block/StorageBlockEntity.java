@@ -4,10 +4,11 @@ import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.DyeColor;
 
 
 public class StorageBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
-    private String channel = "";
+    private int[] dyeChannel = new int[]{DyeColor.WHITE.getId(), DyeColor.WHITE.getId(), DyeColor.WHITE.getId()};
 
     private StorageBlockEntity(BlockEntityType<?> blockEntityType_1) {
         super(blockEntityType_1);
@@ -19,29 +20,31 @@ public class StorageBlockEntity extends BlockEntity implements BlockEntityClient
 
     public void fromTag(CompoundTag compoundTag_1) {
         super.fromTag(compoundTag_1);
-        if (compoundTag_1.contains("channel"))
-            this.channel = compoundTag_1.getString("channel");
+        if (compoundTag_1.contains("dyechannel"))
+            this.dyeChannel = compoundTag_1.getIntArray("dyechannel");
         this.markDirty();
     }
 
     public CompoundTag toTag(CompoundTag compoundTag_1) {
         super.toTag(compoundTag_1);
-        if (hasChannel())
-            compoundTag_1.putString("channel", channel);
+        compoundTag_1.putIntArray("dyechannel", dyeChannel);
         return compoundTag_1;
     }
 
-    boolean hasChannel() {
-        return !channel.equals("");
-    }
-
-    public void setChannel(String channel) {
-        this.channel = channel;
+    public void setDye(int slot, int dye) {
+        this.dyeChannel[slot] = dye;
         this.markDirty();
+        if(!world.isClient) sync();
     }
 
-    public String getChannel() {
-        return channel;
+    public void setChannel(int[] channel) {
+        this.dyeChannel = channel;
+        this.markDirty();
+        if(!world.isClient) sync();
+    }
+
+    public int[] getChannel() {
+        return dyeChannel;
     }
 
     @Override

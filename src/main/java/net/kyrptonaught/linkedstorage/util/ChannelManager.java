@@ -1,6 +1,7 @@
 package net.kyrptonaught.linkedstorage.util;
 
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventory;
+import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -17,7 +18,8 @@ public class ChannelManager implements StorageManagerComponent {
         return this;
     }
 
-    public LinkedInventory getInv(String channel) {
+    public LinkedInventory getInv(int[] dyeChannel) {
+        String channel = LinkedInventoryHelper.getChannelName(dyeChannel);
         if (!inventories.containsKey(channel))
             inventories.put(channel, new LinkedInventory());
         return inventories.get(channel);

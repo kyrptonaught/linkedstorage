@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "linkedstorage",
-  "version": "1.0.0",
+  "version": "1.0.0b1",
   "name": "Linked Storage",
   "description": "Linkable storage's!",
   "authors": [
@@ -19,10 +19,7 @@
       "net.kyrptonaught.linkedstorage.LinkedStorageMod"
     ],
     "client": [
-      "net.kyrptonaught.linkedstorage.LinkedStorageMod"
-    ],
-    "modmenu": [
-      "net.kyrptonaught.linkedstorage.config.modmenu.ModMenuIntegration"
+      "net.kyrptonaught.linkedstorage.LinkedStorageModClient"
     ]
   },
   "depends": {

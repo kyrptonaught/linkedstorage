@@ -1,61 +1,78 @@
 package net.kyrptonaught.linkedstorage.block;
 
+
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
+import net.kyrptonaught.linkedstorage.SetDyePacket;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
-import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryProvider;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.InventoryProvider;
+import net.kyrptonaught.linkedstorage.register.ModBlocks;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SidedInventory;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.item.*;
+import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class StorageBlock extends Block implements BlockEntityProvider, InventoryProvider {
-    static BlockEntityType<StorageBlockEntity> blockEntity;
+public class StorageBlock extends HorizontalFacingBlock implements BlockEntityProvider, InventoryProvider {
+    public static BlockEntityType<StorageBlockEntity> blockEntity;
 
     public StorageBlock(Settings block$Settings_1) {
         super(block$Settings_1);
         Registry.register(Registry.BLOCK, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), this);
-        Registry.register(Registry.ITEM, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), new BlockItem(this, new Item.Settings().group(LinkedStorageMod.modItemGroup)));
+        Registry.register(Registry.ITEM, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), new BlockItem(this, new Item.Settings().group(LinkedStorageMod.GROUP)));
         blockEntity = Registry.register(Registry.BLOCK_ENTITY, LinkedStorageMod.MOD_ID + ":storageblock", BlockEntityType.Builder.create(StorageBlockEntity::new, this).build(null));
+        this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
+
+    }
+
+    private boolean didHitButton(VoxelShape button, BlockPos pos, Vec3d hit) {
+        return button.getBoundingBox().expand(.001).offset(pos.getX(), pos.getY(), pos.getZ()).contains(hit);
+    }
+
+    private void checkButons(BlockState state, BlockPos pos, BlockHitResult hit) {
+        VoxelShape[] buttons = BUTTONS;
+        if (state.get(FACING).equals(Direction.EAST) || state.get(FACING).equals(Direction.WEST))
+            buttons = BUTTONSEW;
+        for (int i = 0; i < buttons.length; i++)
+            if (didHitButton(buttons[i], pos, hit.getPos())) {
+                if (state.get(FACING).equals(Direction.NORTH) || state.get(FACING).equals(Direction.EAST))
+                    SetDyePacket.sendPacket(2 - i, pos);
+                else SetDyePacket.sendPacket(i, pos);
+            }
     }
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient) {
-            ItemStack stack = player.inventory.getMainHandStack();
-            if (stack.getItem() instanceof LinkedInventoryProvider) {
-                String channel = LinkedInventoryHelper.getBlockChannel(world, pos);
-                LinkedInventoryHelper.setItemChannel(channel, stack);
-                player.addChatMessage(new TranslatableText("text.linkedstorage.copied", channel), false);
-            } else {
-                ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), player, (buf) -> buf.writeString(LinkedInventoryHelper.getBlockChannel(world, pos)));
+        ItemStack stack = player.getMainHandStack();
+        if (world.isClient) {
+            if (stack.getItem() instanceof DyeItem) {
+                checkButons(state, pos, hit);
             }
+        } else if (!(stack.getItem() instanceof DyeItem)) {
+            ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), player, (buf) -> buf.writeIntArray(LinkedInventoryHelper.getBlockChannel(world, pos)));
         }
         return ActionResult.SUCCESS;
     }
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState blockState_1, LivingEntity livingEntity_1, ItemStack itemStack_1) {
-        LinkedInventoryHelper.setBlockChannel(livingEntity_1.getEntityName(), world, pos);
+        LinkedInventoryHelper.setBlockChannel(LinkedInventoryHelper.getDefaultChannel(), world, pos);
     }
 
     @Override
@@ -66,5 +83,34 @@ public class StorageBlock extends Block implements BlockEntityProvider, Inventor
     @Override
     public SidedInventory getInventory(BlockState var1, IWorld var2, BlockPos var3) {
         return LinkedStorageMod.CMAN.get(var2.getLevelProperties()).getValue().getInv(LinkedInventoryHelper.getBlockChannel((World) var2, var3));
+    }
+
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
+    }
+
+    public BlockRenderType getRenderType(BlockState blockState_1) {
+        return BlockRenderType.MODEL;
+    }
+
+    private VoxelShape[] BUTTONS = new VoxelShape[]{Block.createCuboidShape(4, 14, 6, 6, 15, 10),
+            Block.createCuboidShape(7, 14, 6, 9, 15, 10),
+            Block.createCuboidShape(10, 14, 6, 12, 15, 10)};
+    private VoxelShape SHAPE = VoxelShapes.union(Block.createCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D), BUTTONS);
+    private VoxelShape[] BUTTONSEW = new VoxelShape[]{ModBlocks.buildWithDir(Direction.EAST, 4, 14, 6, 6, 15, 10),
+            ModBlocks.buildWithDir(Direction.EAST, 7, 14, 6, 9, 15, 10),
+            ModBlocks.buildWithDir(Direction.EAST, 10, 14, 6, 12, 15, 10)};
+    private VoxelShape SHAPEEW = VoxelShapes.union(ModBlocks.buildWithDir(Direction.EAST, 1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D), BUTTONSEW);
+
+    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext ePos) {
+        if (state.get(FACING).equals(Direction.EAST) || state.get(FACING).equals(Direction.WEST))
+            return SHAPEEW;
+        return SHAPE;
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
     }
 }
