@@ -1,5 +1,8 @@
 package net.kyrptonaught.linkedstorage.util;
 
+import nerdhub.cardinal.components.api.ComponentRegistry;
+import nerdhub.cardinal.components.api.ComponentType;
+import nerdhub.cardinal.components.api.event.LevelComponentCallback;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventory;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
@@ -8,16 +11,24 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.DefaultedList;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.level.LevelProperties;
 
 import java.util.HashMap;
 
 public class ChannelManager implements StorageManagerComponent {
     private HashMap<String, LinkedInventory> inventories = new HashMap<>();
+    private static ComponentType<StorageManagerComponent> CHANNEL_MANAGER;
 
-    public static ChannelManager getManager(LevelProperties props){
-        return LinkedStorageMod.CMAN.get(props).getValue();
+    public static void init() {
+        CHANNEL_MANAGER = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier(LinkedStorageMod.MOD_ID, "sman"), StorageManagerComponent.class);
+        LevelComponentCallback.EVENT.register((levelProperties, components) -> components.put(CHANNEL_MANAGER, new ChannelManager()));
     }
+
+    public static ChannelManager getManager(LevelProperties props) {
+        return CHANNEL_MANAGER.get(props).getValue();
+    }
+
     @Override
     public ChannelManager getValue() {
         return this;
