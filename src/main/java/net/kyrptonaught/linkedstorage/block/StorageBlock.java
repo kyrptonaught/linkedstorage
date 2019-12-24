@@ -1,10 +1,10 @@
 package net.kyrptonaught.linkedstorage.block;
 
 
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
-import net.kyrptonaught.linkedstorage.SetDyePacket;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
+import net.kyrptonaught.linkedstorage.network.OpenStoragePacket;
+import net.kyrptonaught.linkedstorage.network.SetDyePacket;
 import net.kyrptonaught.linkedstorage.register.ModBlocks;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -45,29 +45,33 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
         return button.getBoundingBox().expand(.001).offset(pos.getX(), pos.getY(), pos.getZ()).contains(hit);
     }
 
-    private void checkButons(BlockState state, BlockPos pos, BlockHitResult hit) {
+    private boolean checkButons(BlockState state, BlockPos pos, BlockHitResult hit) {
         VoxelShape[] buttons = BUTTONS;
         if (state.get(FACING).equals(Direction.EAST) || state.get(FACING).equals(Direction.WEST))
             buttons = BUTTONSEW;
         for (int i = 0; i < buttons.length; i++)
             if (didHitButton(buttons[i], pos, hit.getPos())) {
-                if (state.get(FACING).equals(Direction.NORTH) || state.get(FACING).equals(Direction.EAST))
+                if (state.get(FACING).equals(Direction.NORTH) || state.get(FACING).equals(Direction.EAST)) {
                     SetDyePacket.sendPacket(2 - i, pos);
-                else SetDyePacket.sendPacket(i, pos);
+                    return true;
+                } else {
+                    SetDyePacket.sendPacket(i, pos);
+                    return true;
+                }
             }
+        return false;
     }
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack stack = player.getMainHandStack();
-        if (world.isClient) {
+        if (world.isClient)
             if (stack.getItem() instanceof DyeItem) {
-                checkButons(state, pos, hit);
-            }
-        } else if (!(stack.getItem() instanceof DyeItem)) {
-            ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), player, (buf) -> buf.writeIntArray(LinkedInventoryHelper.getBlockChannel(world, pos)));
-        }
+                if (!checkButons(state, pos, hit))
+                    OpenStoragePacket.sendPacket(pos);
+            } else OpenStoragePacket.sendPacket(pos);
         return ActionResult.SUCCESS;
+
     }
 
     @Override
@@ -97,11 +101,11 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
     private VoxelShape[] BUTTONS = new VoxelShape[]{Block.createCuboidShape(4, 14, 6, 6, 15, 10),
             Block.createCuboidShape(7, 14, 6, 9, 15, 10),
             Block.createCuboidShape(10, 14, 6, 12, 15, 10)};
-    private VoxelShape SHAPE = VoxelShapes.union(Block.createCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D), BUTTONS);
-    private VoxelShape[] BUTTONSEW = new VoxelShape[]{ModBlocks.buildWithDir(Direction.EAST, 4, 14, 6, 6, 15, 10),
-            ModBlocks.buildWithDir(Direction.EAST, 7, 14, 6, 9, 15, 10),
-            ModBlocks.buildWithDir(Direction.EAST, 10, 14, 6, 12, 15, 10)};
-    private VoxelShape SHAPEEW = VoxelShapes.union(ModBlocks.buildWithDir(Direction.EAST, 1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D), BUTTONSEW);
+    private VoxelShape SHAPE = VoxelShapes.union(Block.createCuboidShape(1, 0, 1, 15, 14, 15), BUTTONS);
+    private VoxelShape[] BUTTONSEW = new VoxelShape[]{ModBlocks.rotate(Direction.EAST, 4, 14, 6, 6, 15, 10),
+            ModBlocks.rotate(Direction.EAST, 7, 14, 6, 9, 15, 10),
+            ModBlocks.rotate(Direction.EAST, 10, 14, 6, 12, 15, 10)};
+    private VoxelShape SHAPEEW = VoxelShapes.union(ModBlocks.rotate(Direction.EAST, 1, 0, 1, 15, 14, 15), BUTTONSEW);
 
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext ePos) {
         if (state.get(FACING).equals(Direction.EAST) || state.get(FACING).equals(Direction.WEST))

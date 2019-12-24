@@ -1,6 +1,9 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "linkedstorage:item/portablestorage"
+    "layer0": "linkedstorage:item/portablestorage",
+    "layer1": "linkedstorage:item/portablestorage_b1",
+    "layer2": "linkedstorage:item/portablestorage_b2",
+    "layer3": "linkedstorage:item/portablestorage_b3"
   }
 }

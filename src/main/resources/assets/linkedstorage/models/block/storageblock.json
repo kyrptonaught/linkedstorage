@@ -3,8 +3,9 @@
   "parent": "block/cube_all",
   "textures": {
     "1": "linkedstorage:block/linkedstorage",
-    "2": "block/white_shulker_box",
-    "particle": "linkedstorage:block/linkedstorage"
+    "2": "block/purpur_block",
+    "3": "linkedstorage:block/linkedstorage_top",
+    "particle": "linkedstorage:block/linkedstorage_top"
   },
   "elements": [
     {
@@ -16,137 +17,69 @@
       ],
       "to": [
         15,
-        10,
-        15
-      ],
-      "faces": {
-        "north": {
-          "uv": [
-            0,
-            6,
-            16,
-            16
-          ],
-          "texture": "#1"
-        },
-        "east": {
-          "uv": [
-            0,
-            6,
-            16,
-            16
-          ],
-          "texture": "#1"
-        },
-        "south": {
-          "uv": [
-            0,
-            6,
-            16,
-            16
-          ],
-          "texture": "#1"
-        },
-        "west": {
-          "uv": [
-            0,
-            6,
-            16,
-            16
-          ],
-          "texture": "#1"
-        },
-        "up": {
-          "uv": [
-            0,
-            6,
-            16,
-            16
-          ],
-          "texture": "#1"
-        },
-        "down": {
-          "uv": [
-            0,
-            6,
-            16,
-            16
-          ],
-          "texture": "#1"
-        }
-      }
-    },
-    {
-      "name": "lid",
-      "from": [
-        1,
-        10,
-        1
-      ],
-      "to": [
-        15,
         14,
         15
       ],
       "faces": {
         "north": {
           "uv": [
-            0,
-            0,
-            16,
-            4
+            1,
+            2,
+            15,
+            16
           ],
           "texture": "#1"
         },
         "east": {
           "uv": [
-            0,
-            0,
-            16,
-            4
+            1,
+            2,
+            15,
+            16
           ],
           "texture": "#1"
         },
         "south": {
           "uv": [
-            0,
-            0,
-            16,
-            4
+            1,
+            2,
+            15,
+            16
           ],
           "texture": "#1"
         },
         "west": {
           "uv": [
-            0,
-            0,
-            16,
-            4
+            1,
+            2,
+            15,
+            16
           ],
           "texture": "#1"
         },
         "up": {
           "uv": [
-            0,
-            6,
-            16,
-            16
+            1,
+            1,
+            15,
+            15
           ],
-          "texture": "#1"
+          "texture": "#3"
         },
         "down": {
           "uv": [
-            0,
-            6,
-            16,
-            16
+            1,
+            1,
+            15,
+            15
           ],
-          "texture": "#1"
+          "texture": "#3",
+          "cullface": "down"
         }
       }
     },
     {
-      "name": "lock",
+      "name": "latch",
       "from": [
         7,
         7,
@@ -160,12 +93,12 @@
       "faces": {
         "north": {
           "uv": [
-            10,
-            14,
-            13,
-            16
+            0,
+            0,
+            2,
+            4
           ],
-          "texture": "#1",
+          "texture": "#2",
           "cullface": "north"
         },
         "east": {
@@ -173,18 +106,18 @@
             0,
             0,
             1,
-            3
+            4
           ],
-          "texture": "#1"
+          "texture": "#2"
         },
         "west": {
           "uv": [
             0,
             0,
             1,
-            3
+            4
           ],
-          "texture": "#1"
+          "texture": "#2"
         },
         "up": {
           "uv": [
@@ -193,7 +126,7 @@
             2,
             1
           ],
-          "texture": "#1"
+          "texture": "#2"
         },
         "down": {
           "uv": [
@@ -202,7 +135,7 @@
             2,
             1
           ],
-          "texture": "#1"
+          "texture": "#2"
         }
       }
     }

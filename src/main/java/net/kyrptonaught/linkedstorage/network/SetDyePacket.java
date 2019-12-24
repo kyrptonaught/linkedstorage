@@ -1,9 +1,10 @@
-package net.kyrptonaught.linkedstorage;
+package net.kyrptonaught.linkedstorage.network;
 
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,7 +17,7 @@ import net.minecraft.util.math.BlockPos;
 public class SetDyePacket {
     private static final Identifier DYE_SET_PACKET = new Identifier(LinkedStorageMod.MOD_ID, "dyesetpacket");
 
-    static void registerReceivePacket() {
+    public static void registerReceivePacket() {
         ServerSidePacketRegistry.INSTANCE.register(DYE_SET_PACKET, (packetContext, packetByteBuf) -> {
             int slot = packetByteBuf.readInt();
             BlockPos pos = packetByteBuf.readBlockPos();
