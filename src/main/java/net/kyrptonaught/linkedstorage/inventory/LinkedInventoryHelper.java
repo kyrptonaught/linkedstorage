@@ -7,7 +7,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class LinkedInventoryHelper {
-
     public static void setBlockChannel(int[] channel, World world, BlockPos pos) {
         StorageBlockEntity sbe = (StorageBlockEntity) world.getBlockEntity(pos);
         sbe.setChannel(channel);
@@ -41,7 +40,7 @@ public class LinkedInventoryHelper {
 
     }
 
-    public static Boolean itemHasChannel(ItemStack stack) {
+    private static Boolean itemHasChannel(ItemStack stack) {
         return stack.getOrCreateTag().contains("dyechannel");
     }
 }

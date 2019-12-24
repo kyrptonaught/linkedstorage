@@ -1,5 +1,6 @@
 package net.kyrptonaught.linkedstorage.util;
 
+import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventory;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
 import net.minecraft.inventory.Inventories;
@@ -7,12 +8,16 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.DefaultedList;
+import net.minecraft.world.level.LevelProperties;
 
 import java.util.HashMap;
 
 public class ChannelManager implements StorageManagerComponent {
     private HashMap<String, LinkedInventory> inventories = new HashMap<>();
 
+    public static ChannelManager getManager(LevelProperties props){
+        return LinkedStorageMod.CMAN.get(props).getValue();
+    }
     @Override
     public ChannelManager getValue() {
         return this;

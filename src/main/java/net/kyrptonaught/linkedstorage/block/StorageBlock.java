@@ -86,7 +86,7 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
 
     @Override
     public SidedInventory getInventory(BlockState var1, IWorld var2, BlockPos var3) {
-        return LinkedStorageMod.CMAN.get(var2.getLevelProperties()).getValue().getInv(LinkedInventoryHelper.getBlockChannel((World) var2, var3));
+        return ((StorageBlockEntity) var2.getBlockEntity(var3)).getLinkedInventory();
     }
 
     @Override
