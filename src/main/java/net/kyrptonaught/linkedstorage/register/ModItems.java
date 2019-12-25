@@ -8,6 +8,6 @@ public class ModItems {
     public static Item storageItem;
 
     public static void register() {
-        storageItem = new StorageItem(new Item.Settings().group(LinkedStorageMod.GROUP));
+        storageItem = new StorageItem(new Item.Settings().group(LinkedStorageMod.GROUP).maxCount(1));
     }
 }
