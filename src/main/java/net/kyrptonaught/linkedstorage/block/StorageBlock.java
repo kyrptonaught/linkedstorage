@@ -44,7 +44,6 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
     public StorageBlock(Settings block$Settings_1) {
         super(block$Settings_1);
         Registry.register(Registry.BLOCK, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), this);
-        Registry.register(Registry.ITEM, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), new StorageBlockItem(this, new Item.Settings().group(LinkedStorageMod.GROUP)));
         blockEntity = Registry.register(Registry.BLOCK_ENTITY, LinkedStorageMod.MOD_ID + ":storageblock", BlockEntityType.Builder.create(StorageBlockEntity::new, this).build(null));
         this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
 

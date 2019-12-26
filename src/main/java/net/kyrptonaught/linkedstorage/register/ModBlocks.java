@@ -1,16 +1,23 @@
 package net.kyrptonaught.linkedstorage.register;
 
+import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.block.StorageBlock;
+import net.kyrptonaught.linkedstorage.block.StorageBlockItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
+import net.minecraft.item.Item;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 
 public class ModBlocks {
     public static Block storageBlock;
+    public static Item storageBlockItem;
 
     public static void register() {
         storageBlock = new StorageBlock(Block.Settings.of(Material.METAL).strength(2.5f, 2.5f));
+        storageBlockItem = Registry.register(Registry.ITEM, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), new StorageBlockItem(storageBlock, new Item.Settings().group(LinkedStorageMod.GROUP)));
     }
 
     public static VoxelShape rotate(Direction facing, double x, double y, double z, double x2, double y2, double z2) {
