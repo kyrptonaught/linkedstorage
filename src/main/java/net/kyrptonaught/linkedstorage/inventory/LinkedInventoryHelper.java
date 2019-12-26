@@ -2,6 +2,7 @@ package net.kyrptonaught.linkedstorage.inventory;
 
 import net.kyrptonaught.linkedstorage.block.StorageBlockEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -40,6 +41,12 @@ public class LinkedInventoryHelper {
     }
 
     private static Boolean itemHasChannel(ItemStack stack) {
-        return stack.getOrCreateTag().contains("dyechannel");
+        CompoundTag tag = stack.getOrCreateTag();
+        if (tag.contains("dyechannel", 11)) {
+            int[] oldChannel = tag.getIntArray("dyechannel").clone();
+            tag.remove("dyechannel");
+            tag.putByteArray("dyechannel", new byte[]{(byte) oldChannel[0], (byte) oldChannel[1], (byte) oldChannel[2]});
+        }
+        return tag.contains("dyechannel", 7);
     }
 }

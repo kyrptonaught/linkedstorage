@@ -8,7 +8,6 @@ import net.kyrptonaught.linkedstorage.block.StorageBlock;
 import net.kyrptonaught.linkedstorage.block.StorageBlockRenderer;
 import net.kyrptonaught.linkedstorage.client.StorageContainerScreen;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
-import net.kyrptonaught.linkedstorage.register.ModBlocks;
 import net.kyrptonaught.linkedstorage.register.ModItems;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
@@ -27,6 +26,6 @@ public class LinkedStorageModClient implements ClientModInitializer {
             if (layer == 0) return DyeColor.WHITE.getMaterialColor().color;
             byte[] colors = LinkedInventoryHelper.getItemChannel(stack);
             return DyeColor.byId(colors[layer - 1]).getMaterialColor().color;
-        }, ModItems.storageItem, ModBlocks.storageBlockItem, ModBlocks.storageBlock);
+        }, ModItems.storageItem);
     }
 }

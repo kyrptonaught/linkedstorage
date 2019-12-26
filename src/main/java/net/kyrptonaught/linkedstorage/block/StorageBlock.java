@@ -1,6 +1,5 @@
 package net.kyrptonaught.linkedstorage.block;
 
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
@@ -9,18 +8,16 @@ import net.kyrptonaught.linkedstorage.network.OpenStoragePacket;
 import net.kyrptonaught.linkedstorage.network.SetDyePacket;
 import net.kyrptonaught.linkedstorage.register.ModBlocks;
 import net.minecraft.block.*;
-import net.minecraft.block.entity.BannerBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SidedInventory;
-import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.item.DyeItem;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -34,9 +31,6 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class StorageBlock extends HorizontalFacingBlock implements BlockEntityProvider, InventoryProvider {
     public static BlockEntityType<StorageBlockEntity> blockEntity;

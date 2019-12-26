@@ -25,7 +25,11 @@
   "result": {
     "item": "linkedstorage:storageblock",
     "data": {
-      "dyechannel": [0,0,0]
+      "dyechannel": [
+        0,
+        0,
+        0
+      ]
     }
   }
 }
