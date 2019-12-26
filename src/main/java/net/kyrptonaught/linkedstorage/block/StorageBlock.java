@@ -1,12 +1,15 @@
 package net.kyrptonaught.linkedstorage.block;
 
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
 import net.kyrptonaught.linkedstorage.network.OpenStoragePacket;
 import net.kyrptonaught.linkedstorage.network.SetDyePacket;
 import net.kyrptonaught.linkedstorage.register.ModBlocks;
 import net.minecraft.block.*;
+import net.minecraft.block.entity.BannerBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityContext;
@@ -14,6 +17,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.*;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -28,6 +32,8 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public class StorageBlock extends HorizontalFacingBlock implements BlockEntityProvider, InventoryProvider {
     public static BlockEntityType<StorageBlockEntity> blockEntity;
@@ -75,8 +81,13 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState blockState_1, LivingEntity livingEntity_1, ItemStack itemStack_1) {
-        LinkedInventoryHelper.setBlockChannel(LinkedInventoryHelper.getDefaultChannel(), world, pos);
+    public void onPlaced(World world, BlockPos pos, BlockState blockState_1, LivingEntity livingEntity_1, ItemStack stack) {
+        if (!world.isClient()) {
+            CompoundTag compoundTag = stack.getSubTag("BlockEntityTag");
+            if (compoundTag != null && compoundTag.contains("dyechannel")) {
+                LinkedInventoryHelper.setBlockChannel(compoundTag.getIntArray("dyechannel"), world, pos);
+            } else LinkedInventoryHelper.setBlockChannel(LinkedInventoryHelper.getDefaultChannel(), world, pos);
+        }
     }
 
     @Override
@@ -87,6 +98,14 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
     @Override
     public SidedInventory getInventory(BlockState var1, IWorld var2, BlockPos var3) {
         return ((StorageBlockEntity) var2.getBlockEntity(var3)).getLinkedInventory();
+    }
+
+    @Environment(EnvType.CLIENT)
+    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+        int[] dyechannel = LinkedInventoryHelper.getBlockChannel((World) world, pos);
+        ItemStack stack = new ItemStack(this);
+        stack.getOrCreateSubTag("BlockEntityTag").putIntArray("dyechannel",dyechannel);
+        return stack;
     }
 
     @Override

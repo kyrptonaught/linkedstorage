@@ -1,12 +1,20 @@
 package net.kyrptonaught.linkedstorage.block;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventory;
 import net.kyrptonaught.linkedstorage.util.ChannelManager;
+import net.minecraft.block.AbstractBannerBlock;
+import net.minecraft.block.BannerBlock;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.DyeColor;
+
+import java.util.function.Supplier;
 
 public class StorageBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
     private int[] dyeChannel = new int[]{DyeColor.WHITE.getId(), DyeColor.WHITE.getId(), DyeColor.WHITE.getId()};
