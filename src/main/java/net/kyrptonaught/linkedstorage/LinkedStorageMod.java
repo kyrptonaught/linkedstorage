@@ -24,12 +24,12 @@ public class LinkedStorageMod implements ModInitializer {
         ChannelManager.init();
         ModBlocks.register();
         ModItems.register();
-        ContainerProviderRegistry.INSTANCE.registerFactory(new Identifier(MOD_ID, "linkedstorage"), (syncId, id, player, buf) -> getContainer(syncId, player, buf.readIntArray()));
+        ContainerProviderRegistry.INSTANCE.registerFactory(new Identifier(MOD_ID, "linkedstorage"), (syncId, id, player, buf) -> getContainer(syncId, player, buf.readByteArray()));
         SetDyePacket.registerReceivePacket();
         OpenStoragePacket.registerReceivePacket();
     }
 
-    static Container getContainer(int id, PlayerEntity player, int[] channel) {
+    static Container getContainer(int id, PlayerEntity player, byte[] channel) {
         return GenericContainer.createGeneric9x3(id, player.inventory, ChannelManager.getManager(player.getEntityWorld().getLevelProperties()).getInv(channel));
     }
 }

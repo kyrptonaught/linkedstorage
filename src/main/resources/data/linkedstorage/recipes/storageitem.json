@@ -17,6 +17,9 @@
     }
   },
   "result": {
-    "item": "linkedstorage:storageitem"
+    "item": "linkedstorage:storageitem",
+    "data": {
+      "dyechannel": "$ i4.dyechannel"
+    }
   }
 }

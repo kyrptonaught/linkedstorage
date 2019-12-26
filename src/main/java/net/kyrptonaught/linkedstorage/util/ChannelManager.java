@@ -34,7 +34,7 @@ public class ChannelManager implements StorageManagerComponent {
         return this;
     }
 
-    public LinkedInventory getInv(int[] dyeChannel) {
+    public LinkedInventory getInv(byte[] dyeChannel) {
         String channel = LinkedInventoryHelper.getChannelName(dyeChannel);
         if (!inventories.containsKey(channel))
             inventories.put(channel, new LinkedInventory());

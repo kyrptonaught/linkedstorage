@@ -12,6 +12,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BannerBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,6 +20,7 @@ import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.state.StateManager;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -34,6 +36,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class StorageBlock extends HorizontalFacingBlock implements BlockEntityProvider, InventoryProvider {
     public static BlockEntityType<StorageBlockEntity> blockEntity;
@@ -41,7 +44,7 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
     public StorageBlock(Settings block$Settings_1) {
         super(block$Settings_1);
         Registry.register(Registry.BLOCK, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), this);
-        Registry.register(Registry.ITEM, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), new BlockItem(this, new Item.Settings().group(LinkedStorageMod.GROUP)));
+        Registry.register(Registry.ITEM, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), new StorageBlockItem(this, new Item.Settings().group(LinkedStorageMod.GROUP)));
         blockEntity = Registry.register(Registry.BLOCK_ENTITY, LinkedStorageMod.MOD_ID + ":storageblock", BlockEntityType.Builder.create(StorageBlockEntity::new, this).build(null));
         this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
 
@@ -83,10 +86,8 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState blockState_1, LivingEntity livingEntity_1, ItemStack stack) {
         if (!world.isClient()) {
-            CompoundTag compoundTag = stack.getSubTag("BlockEntityTag");
-            if (compoundTag != null && compoundTag.contains("dyechannel")) {
-                LinkedInventoryHelper.setBlockChannel(compoundTag.getIntArray("dyechannel"), world, pos);
-            } else LinkedInventoryHelper.setBlockChannel(LinkedInventoryHelper.getDefaultChannel(), world, pos);
+            System.out.println(stack.getOrCreateTag().get("dyechannel").asString());
+            LinkedInventoryHelper.setBlockChannel(LinkedInventoryHelper.getItemChannel(stack), world, pos);
         }
     }
 
@@ -102,9 +103,9 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
 
     @Environment(EnvType.CLIENT)
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        int[] dyechannel = LinkedInventoryHelper.getBlockChannel((World) world, pos);
+        byte[] dyechannel = LinkedInventoryHelper.getBlockChannel((World) world, pos);
         ItemStack stack = new ItemStack(this);
-        stack.getOrCreateSubTag("BlockEntityTag").putIntArray("dyechannel",dyechannel);
+        LinkedInventoryHelper.setItemChannel(dyechannel, stack);
         return stack;
     }
 

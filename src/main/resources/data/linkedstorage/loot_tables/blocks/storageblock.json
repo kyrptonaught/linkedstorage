@@ -13,7 +13,7 @@
               "ops": [
                 {
                   "source": "dyechannel",
-                  "target": "BlockEntityTag.dyechannel",
+                  "target": "dyechannel",
                   "op": "replace"
                 }
               ]
