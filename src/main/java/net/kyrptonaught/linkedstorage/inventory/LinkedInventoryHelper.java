@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 public class LinkedInventoryHelper {
     public static void setBlockChannel(byte[] channel, World world, BlockPos pos) {
         StorageBlockEntity sbe = (StorageBlockEntity) world.getBlockEntity(pos);
-        sbe.setChannel(channel);
+        sbe.setChannel(channel.clone());
     }
 
     public static void setBlockDye(int slot, int dye, World world, BlockPos pos) {
