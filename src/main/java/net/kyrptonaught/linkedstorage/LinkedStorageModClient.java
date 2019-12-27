@@ -20,10 +20,11 @@ public class LinkedStorageModClient implements ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), (syncId, identifier, player, buf) ->
         {
             byte[] channel = buf.readByteArray();
-            return new StorageContainerScreen(LinkedStorageMod.getContainer(syncId, player, channel), player.inventory, LinkedInventoryHelper.getChannelName(channel));
+            return new StorageContainerScreen(LinkedStorageMod.getContainer(syncId, player, channel), player.inventory);
         });
         ColorProviderRegistryImpl.ITEM.register((stack, layer) -> {
-            if (layer == 0) return DyeColor.WHITE.getMaterialColor().color;
+            if (layer == 0 || !LinkedInventoryHelper.itemHasChannel(stack))
+                return DyeColor.WHITE.getMaterialColor().color;
             byte[] colors = LinkedInventoryHelper.getItemChannel(stack);
             return DyeColor.byId(colors[layer - 1]).getMaterialColor().color;
         }, ModItems.storageItem);

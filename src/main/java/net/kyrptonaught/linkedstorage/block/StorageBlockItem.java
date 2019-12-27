@@ -23,8 +23,12 @@ public class StorageBlockItem extends BlockItem {
     @Environment(EnvType.CLIENT)
     @Override
     public void appendTooltip(ItemStack itemStack_1, World world_1, List<Text> list_1, TooltipContext tooltipContext_1) {
-        byte[] channel = LinkedInventoryHelper.getItemChannel(itemStack_1);
+        byte[] channel;
+        if (LinkedInventoryHelper.itemHasChannel(itemStack_1))
+            channel = LinkedInventoryHelper.getItemChannel(itemStack_1);
+        else channel = LinkedInventoryHelper.getDefaultChannel();
         String name = DyeColor.byId(channel[0]).getName() + ", " + DyeColor.byId(channel[1]).getName() + ", " + DyeColor.byId(channel[2]).getName();
         list_1.add(new TranslatableText("text.linkeditem.channel", name).formatted(Formatting.GRAY));
+
     }
 }

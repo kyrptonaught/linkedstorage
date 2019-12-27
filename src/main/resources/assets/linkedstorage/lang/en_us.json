@@ -1,5 +1,5 @@
 {
-  "container.linkedstorage": "Linked Storage: %s",
+  "container.linkedstorage": "Linked Storage",
   "itemGroup.linkedstorage.linkedstorage": "Linked Storage",
   "text.linkedstorage.copied": "Copied Storage link: %s",
   "text.linkedstorage.set": "Set Storage to: %s",

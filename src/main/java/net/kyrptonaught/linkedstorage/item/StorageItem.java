@@ -38,8 +38,10 @@ public class StorageItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
         ItemStack stack = playerEntity.getStackInHand(hand);
         if (!world.isClient) {
-            byte[] channel = LinkedInventoryHelper.getItemChannel(stack);
-            ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), playerEntity, (buf) -> buf.writeByteArray(channel));
+            if (LinkedInventoryHelper.itemHasChannel(stack)) {
+                byte[] channel = LinkedInventoryHelper.getItemChannel(stack);
+                ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), playerEntity, (buf) -> buf.writeByteArray(channel));
+            }
         }
         return new TypedActionResult<>(ActionResult.SUCCESS, stack);
     }
@@ -47,10 +49,12 @@ public class StorageItem extends Item {
     @Environment(EnvType.CLIENT)
     @Override
     public void appendTooltip(ItemStack itemStack_1, World world_1, List<Text> list_1, TooltipContext tooltipContext_1) {
-        byte[] channel = LinkedInventoryHelper.getItemChannel(itemStack_1);
-        if (channel.length > 0) {
-            String name = DyeColor.byId(channel[0]).getName() + ", " + DyeColor.byId(channel[1]).getName() + ", " + DyeColor.byId(channel[2]).getName();
-            list_1.add(new TranslatableText("text.linkeditem.channel", name).formatted(Formatting.GRAY));
-        }
+        byte[] channel;
+        if (LinkedInventoryHelper.itemHasChannel(itemStack_1))
+            channel = LinkedInventoryHelper.getItemChannel(itemStack_1);
+        else channel = LinkedInventoryHelper.getDefaultChannel();
+        String name = DyeColor.byId(channel[0]).getName() + ", " + DyeColor.byId(channel[1]).getName() + ", " + DyeColor.byId(channel[2]).getName();
+        list_1.add(new TranslatableText("text.linkeditem.channel", name).formatted(Formatting.GRAY));
+
     }
 }

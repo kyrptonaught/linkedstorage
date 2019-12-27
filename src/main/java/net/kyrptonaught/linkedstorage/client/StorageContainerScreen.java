@@ -11,8 +11,8 @@ public class StorageContainerScreen extends AbstractContainerScreen<Container> {
     private static final Identifier TEXTURE = new Identifier("textures/gui/container/generic_54.png");
     private final int rows = 3;
 
-    public StorageContainerScreen(Container container, PlayerInventory inventory, String invName) {
-        super(container, inventory, new TranslatableText("container.linkedstorage", invName));
+    public StorageContainerScreen(Container container, PlayerInventory inventory) {
+        super(container, inventory, new TranslatableText("container.linkedstorage"));
         this.passEvents = true;
         this.containerHeight = 114 + this.rows * 18;
     }

@@ -79,8 +79,9 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState blockState_1, LivingEntity livingEntity_1, ItemStack stack) {
         if (!world.isClient()) {
-            System.out.println(stack.getOrCreateTag().get("dyechannel").asString());
-            LinkedInventoryHelper.setBlockChannel(LinkedInventoryHelper.getItemChannel(stack), world, pos);
+            if (LinkedInventoryHelper.itemHasChannel(stack))
+                LinkedInventoryHelper.setBlockChannel(LinkedInventoryHelper.getItemChannel(stack), world, pos);
+            else LinkedInventoryHelper.setBlockChannel(LinkedInventoryHelper.getDefaultChannel(), world, pos);
         }
     }
 

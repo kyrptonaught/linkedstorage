@@ -28,7 +28,6 @@ public class LinkedInventoryHelper {
     }
 
     public static byte[] getItemChannel(ItemStack stack) {
-        if (!itemHasChannel(stack)) setItemChannel(getDefaultChannel(), stack);
         return stack.getOrCreateTag().getByteArray("dyechannel");
     }
 
@@ -40,7 +39,7 @@ public class LinkedInventoryHelper {
         return dyeChannel[0] + "" + dyeChannel[1] + "" + dyeChannel[2];
     }
 
-    private static Boolean itemHasChannel(ItemStack stack) {
+    public static Boolean itemHasChannel(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         if (tag.contains("dyechannel", 11)) {
             int[] oldChannel = tag.getIntArray("dyechannel").clone();
