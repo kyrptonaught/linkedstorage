@@ -34,8 +34,8 @@ dependencies {
 	//modApi "blue.endless:jankson:+"
 	//include "blue.endless:jankson:+"
 
-	modApi "de.siphalor:nbt-crafting-1.15:1.2.8"
-	include "de.siphalor:nbt-crafting-1.15:1.2.8"
+	//modRuntime "de.siphalor:nbt-crafting-1.15:1.2.8+1.15.1"
+	//include "de.siphalor:nbt-crafting-1.15:1.2.8+1.15.1"
 	modApi "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-base:+"
 	modApi "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-level:+"
 	modApi "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-world:+"
