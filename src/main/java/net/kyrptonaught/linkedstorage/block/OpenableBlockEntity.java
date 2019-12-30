@@ -4,42 +4,24 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.api.EnvironmentInterfaces;
-import net.kyrptonaught.linkedstorage.inventory.LinkedContainer;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.block.ChestAnimationProgress;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Tickable;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 
-import java.util.List;
-
-@EnvironmentInterfaces({@EnvironmentInterface(value = EnvType.CLIENT, itf = ChestAnimationProgress.class)})
+@EnvironmentInterfaces({@EnvironmentInterface(value = EnvType.CLIENT, itf = ChestAnimationProgress.class), @EnvironmentInterface(value = EnvType.CLIENT, itf = Tickable.class)})
 public class OpenableBlockEntity extends BlockEntity implements ChestAnimationProgress, Tickable {
     OpenableBlockEntity(BlockEntityType<?> blockEntityType) {
         super(blockEntityType);
     }
 
     @Environment(EnvType.CLIENT)
-    private static int countViewers(World world, OpenableBlockEntity instance, int x, int y, int z) {
-        int viewers = 0;
-        List<PlayerEntity> playersInRange = world.getNonSpectatingEntities(PlayerEntity.class, new Box(x - 5, y - 5, z - 5, x + 6, y + 6, z + 6));
-
-        for (PlayerEntity player : playersInRange) {
-            if (player.container instanceof LinkedContainer && instance.isPlayerViewing(player))
-                viewers++;
-        }
-        return viewers;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public boolean isPlayerViewing(PlayerEntity playe) {
-        return true;
+    protected int countViewers() {
+        return 0;
     }
 
     @Override
@@ -52,9 +34,11 @@ public class OpenableBlockEntity extends BlockEntity implements ChestAnimationPr
     private float lastAnimationAngle;
 
     @Override
+    @Environment(EnvType.CLIENT)
     public void tick() {
+        System.out.println(world.isClient);
         if (world != null && world.isClient) {
-            int viewerCount = countViewers(world, this, pos.getX(), pos.getY(), pos.getZ());
+            int viewerCount = countViewers();
             lastAnimationAngle = animationAngle;
             if (viewerCount > 0 && animationAngle == 0.0F) playSound(SoundEvents.BLOCK_ENDER_CHEST_OPEN);
             if (viewerCount == 0 && animationAngle > 0.0F || viewerCount > 0 && animationAngle < 1.0F) {

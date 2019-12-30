@@ -13,8 +13,9 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
+
 @Environment(EnvType.CLIENT)
-public class DummyStorageBlockEntityRenderer  extends BlockEntityRenderer<DummyStorageBlockEntity> {
+public class DummyStorageBlockEntityRenderer extends BlockEntityRenderer<DummyStorageBlockEntity> {
     private static final Identifier WOOL_TEXTURE = new Identifier("textures/block/white_wool.png");
 
     public DummyStorageBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
@@ -38,6 +39,6 @@ public class DummyStorageBlockEntityRenderer  extends BlockEntityRenderer<DummyS
         model.button1.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(WOOL_TEXTURE)), light, overlay, color1[0], color1[1], color1[2], 1);
         model.button2.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(WOOL_TEXTURE)), light, overlay, color2[0], color2[1], color2[2], 1);
         model.button3.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(WOOL_TEXTURE)), light, overlay, color3[0], color3[1], color3[2], 1);
-       // matrices.pop();
+        // matrices.pop();
     }
 }

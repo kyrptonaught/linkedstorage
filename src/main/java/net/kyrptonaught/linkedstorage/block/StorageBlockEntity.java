@@ -1,12 +1,13 @@
 package net.kyrptonaught.linkedstorage.block;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-import net.kyrptonaught.linkedstorage.inventory.LinkedContainer;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventory;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
+import net.kyrptonaught.linkedstorage.network.ChannelViewers;
 import net.kyrptonaught.linkedstorage.util.ChannelManager;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 
 public class StorageBlockEntity extends OpenableBlockEntity implements BlockEntityClientSerializable {
@@ -64,10 +65,6 @@ public class StorageBlockEntity extends OpenableBlockEntity implements BlockEnti
         if (!world.isClient) sync();
     }
 
-    public void setChannelNoUpdate(byte[] channel) {
-        this.dyeChannel = channel;
-    }
-
     public byte[] getChannel() {
         return dyeChannel;
     }
@@ -83,7 +80,8 @@ public class StorageBlockEntity extends OpenableBlockEntity implements BlockEnti
     }
 
     @Override
-    public boolean isPlayerViewing(PlayerEntity player) {
-        return ((LinkedContainer) player.container).linkedBlock.equals(pos);
+    @Environment(EnvType.CLIENT)
+    public int countViewers() {
+        return ChannelViewers.getViewersFor(LinkedInventoryHelper.getChannelName(dyeChannel)) ? 1 : 0;
     }
 }

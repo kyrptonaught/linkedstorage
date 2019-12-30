@@ -13,11 +13,13 @@ import net.minecraft.util.Identifier;
 public class StorageContainerScreen extends AbstractContainerScreen<Container> {
     private static final Identifier TEXTURE = new Identifier("textures/gui/container/generic_54.png");
     private final int rows = 3;
+    public byte[] channel;
 
-    public StorageContainerScreen(Container container, PlayerInventory inventory) {
+    public StorageContainerScreen(Container container, PlayerInventory inventory, byte[] channel) {
         super(container, inventory, new TranslatableText("container.linkedstorage"));
         this.passEvents = true;
         this.containerHeight = 114 + this.rows * 18;
+        this.channel = channel;
     }
 
     public void render(int int_1, int int_2, float float_1) {

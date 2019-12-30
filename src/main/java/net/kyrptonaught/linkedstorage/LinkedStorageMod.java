@@ -4,6 +4,8 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.kyrptonaught.linkedstorage.inventory.LinkedContainer;
+import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
+import net.kyrptonaught.linkedstorage.network.ChannelViewers;
 import net.kyrptonaught.linkedstorage.network.OpenStoragePacket;
 import net.kyrptonaught.linkedstorage.network.SetDyePacket;
 import net.kyrptonaught.linkedstorage.register.ModBlocks;
@@ -13,7 +15,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 
 public class LinkedStorageMod implements ModInitializer {
     public static final String MOD_ID = "linkedstorage";
@@ -24,12 +25,14 @@ public class LinkedStorageMod implements ModInitializer {
         ChannelManager.init();
         ModBlocks.register();
         ModItems.register();
-        ContainerProviderRegistry.INSTANCE.registerFactory(new Identifier(MOD_ID, "linkedstorage"), (syncId, id, player, buf) -> getContainer(syncId, player, buf.readByteArray(), buf.readBlockPos()));
+        ContainerProviderRegistry.INSTANCE.registerFactory(new Identifier(MOD_ID, "linkedstorage"), (syncId, id, player, buf) -> getContainer(syncId, player, buf.readByteArray()));
         SetDyePacket.registerReceivePacket();
         OpenStoragePacket.registerReceivePacket();
+        ChannelViewers.registerChannelWatcher();
     }
 
-    static LinkedContainer getContainer(int id, PlayerEntity player, byte[] channel, BlockPos pos) {
-        return new LinkedContainer(id, player.inventory, ChannelManager.getManager(player.getEntityWorld().getLevelProperties()).getInv(channel), pos);
+    static LinkedContainer getContainer(int id, PlayerEntity player, byte[] channel) {
+        ChannelViewers.addViewerFor(LinkedInventoryHelper.getChannelName(channel), player);
+        return new LinkedContainer(id, player.inventory, ChannelManager.getManager(player.getEntityWorld().getLevelProperties()).getInv(channel), channel);
     }
 }

@@ -31,7 +31,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class StorageBlock extends HorizontalFacingBlock implements BlockEntityProvider, InventoryProvider {
@@ -135,7 +134,7 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
     }
 
     @Environment(EnvType.CLIENT)
-    public void buildTooltip(ItemStack stack, @Nullable BlockView view, List<Text> tooltip, TooltipContext options) {
+    public void buildTooltip(ItemStack stack, BlockView view, List<Text> tooltip, TooltipContext options) {
         byte[] channel;
         if (LinkedInventoryHelper.itemHasChannel(stack))
             channel = LinkedInventoryHelper.getItemChannel(stack);

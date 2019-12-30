@@ -24,10 +24,7 @@ public class OpenStoragePacket {
             packetContext.getTaskQueue().execute(() -> {
                 PlayerEntity player = packetContext.getPlayer();
                 World world = player.getEntityWorld();
-                ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), packetContext.getPlayer(), (buf) -> {
-                    buf.writeByteArray(LinkedInventoryHelper.getBlockChannel(world, pos));
-                    buf.writeBlockPos(pos);
-                });
+                ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), packetContext.getPlayer(), (buf) -> buf.writeByteArray(LinkedInventoryHelper.getBlockChannel(world, pos)));
             });
         });
     }
