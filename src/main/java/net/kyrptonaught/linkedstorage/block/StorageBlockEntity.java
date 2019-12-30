@@ -17,7 +17,7 @@ public class StorageBlockEntity extends OpenableBlockEntity implements BlockEnti
         super(blockEntityType_1);
     }
 
-    StorageBlockEntity() {
+    public StorageBlockEntity() {
         this(StorageBlock.blockEntity);
     }
 
@@ -62,6 +62,10 @@ public class StorageBlockEntity extends OpenableBlockEntity implements BlockEnti
         updateInventory();
         this.markDirty();
         if (!world.isClient) sync();
+    }
+
+    public void setChannelNoUpdate(byte[] channel) {
+        this.dyeChannel = channel;
     }
 
     public byte[] getChannel() {

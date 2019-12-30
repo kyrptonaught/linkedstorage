@@ -38,7 +38,11 @@ public class LinkedInventoryHelper {
     public static String getChannelName(byte[] dyeChannel) {
         return dyeChannel[0] + "" + dyeChannel[1] + "" + dyeChannel[2];
     }
-
+    public static byte[] getItemChannelOrDefault(ItemStack stack) {
+        if(itemHasChannel(stack))
+        return stack.getOrCreateTag().getByteArray("dyechannel");
+        return getDefaultChannel();
+    }
     public static Boolean itemHasChannel(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         if (tag.contains("dyechannel", 11)) {

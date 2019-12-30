@@ -14,6 +14,12 @@
   "license": "MIT",
   "icon": "assets/linkedstorage/icon.png",
   "environment": "*",
+  "mixins": [
+    {
+      "config": "net.kyrptonaught.linkedstorage.json",
+      "environment": "client"
+    }
+  ],
   "entrypoints": {
     "main": [
       "net.kyrptonaught.linkedstorage.LinkedStorageMod"

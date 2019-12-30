@@ -10,17 +10,16 @@ import net.kyrptonaught.linkedstorage.register.ModBlocks;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SidedInventory;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.state.StateManager;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -32,6 +31,9 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+import java.util.List;
+
 public class StorageBlock extends HorizontalFacingBlock implements BlockEntityProvider, InventoryProvider {
     public static BlockEntityType<StorageBlockEntity> blockEntity;
 
@@ -39,8 +41,8 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
         super(block$Settings_1);
         Registry.register(Registry.BLOCK, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), this);
         blockEntity = Registry.register(Registry.BLOCK_ENTITY, LinkedStorageMod.MOD_ID + ":storageblock", BlockEntityType.Builder.create(StorageBlockEntity::new, this).build(null));
+        Registry.register(Registry.ITEM, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), new BlockItem(this, new Item.Settings().group(LinkedStorageMod.GROUP)));
         this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
-
     }
 
     private boolean didHitButton(VoxelShape button, BlockPos pos, Vec3d hit) {
@@ -130,6 +132,16 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
         if (state.get(FACING).equals(Direction.EAST) || state.get(FACING).equals(Direction.WEST))
             return SHAPEEW;
         return SHAPE;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void buildTooltip(ItemStack stack, @Nullable BlockView view, List<Text> tooltip, TooltipContext options) {
+        byte[] channel;
+        if (LinkedInventoryHelper.itemHasChannel(stack))
+            channel = LinkedInventoryHelper.getItemChannel(stack);
+        else channel = LinkedInventoryHelper.getDefaultChannel();
+        String name = DyeColor.byId(channel[0]).getName() + ", " + DyeColor.byId(channel[1]).getName() + ", " + DyeColor.byId(channel[2]).getName();
+        tooltip.add(new TranslatableText("text.linkeditem.channel", name).formatted(Formatting.GRAY));
     }
 
     @Override

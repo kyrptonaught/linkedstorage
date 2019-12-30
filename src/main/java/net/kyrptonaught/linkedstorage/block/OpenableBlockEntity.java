@@ -5,10 +5,8 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.api.EnvironmentInterfaces;
 import net.kyrptonaught.linkedstorage.inventory.LinkedContainer;
-import net.minecraft.block.ChestBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.enums.ChestType;
 import net.minecraft.client.block.ChestAnimationProgress;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -16,7 +14,6 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
@@ -59,21 +56,22 @@ public class OpenableBlockEntity extends BlockEntity implements ChestAnimationPr
         if (world != null && world.isClient) {
             int viewerCount = countViewers(world, this, pos.getX(), pos.getY(), pos.getZ());
             lastAnimationAngle = animationAngle;
-            if (viewerCount > 0 && animationAngle == 0.0F) playSound(SoundEvents.BLOCK_CHEST_OPEN);
+            if (viewerCount > 0 && animationAngle == 0.0F) playSound(SoundEvents.BLOCK_ENDER_CHEST_OPEN);
             if (viewerCount == 0 && animationAngle > 0.0F || viewerCount > 0 && animationAngle < 1.0F) {
                 float float_2 = animationAngle;
                 if (viewerCount > 0) animationAngle += 0.1F;
                 else animationAngle -= 0.1F;
                 animationAngle = MathHelper.clamp(animationAngle, 0, 1);
-                if (animationAngle < 0.5F && float_2 >= 0.5F) playSound(SoundEvents.BLOCK_CHEST_CLOSE);
+                if (animationAngle < 0.5F && float_2 >= 0.5F) playSound(SoundEvents.BLOCK_ENDER_CHEST_CLOSE);
             }
         }
     }
 
+    @Environment(EnvType.CLIENT)
     private void playSound(SoundEvent soundEvent) {
         double d = (double) this.pos.getX() + 0.5D;
         double e = (double) this.pos.getY() + 0.5D;
         double f = (double) this.pos.getZ() + 0.5D;
-        this.world.playSound(null, d, e, f, soundEvent, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
+        this.world.playSound(d, e, f, soundEvent, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F, false);
     }
 }
