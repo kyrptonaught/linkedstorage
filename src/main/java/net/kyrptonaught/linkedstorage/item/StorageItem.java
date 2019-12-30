@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
+import net.kyrptonaught.linkedstorage.block.StorageBlock;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,10 +27,13 @@ public class StorageItem extends Item {
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-        if (!context.getWorld().isClient && context.getPlayer().isSneaking()) {
-            byte[] channel = LinkedInventoryHelper.getBlockChannel(context.getWorld(), context.getBlockPos());
-            LinkedInventoryHelper.setItemChannel(channel, context.getStack());
-            context.getPlayer().addChatMessage(new TranslatableText("text.linkedstorage.set", LinkedInventoryHelper.getChannelName(channel)), false);
+        if (!context.getWorld().isClient) {
+            PlayerEntity playerEntity = context.getPlayer();
+            if (playerEntity.isSneaking() && context.getWorld().getBlockState(context.getBlockPos()).getBlock() instanceof StorageBlock) {
+                byte[] channel = LinkedInventoryHelper.getBlockChannel(context.getWorld(), context.getBlockPos());
+                LinkedInventoryHelper.setItemChannel(channel, context.getStack());
+                context.getPlayer().addChatMessage(new TranslatableText("text.linkedstorage.set", LinkedInventoryHelper.getChannelName(channel)), false);
+            } else use(context.getWorld(), context.getPlayer(), context.getHand());
         }
         return ActionResult.SUCCESS;
     }
@@ -40,7 +44,10 @@ public class StorageItem extends Item {
         if (!world.isClient) {
             if (LinkedInventoryHelper.itemHasChannel(stack)) {
                 byte[] channel = LinkedInventoryHelper.getItemChannel(stack);
-                ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), playerEntity, (buf) -> buf.writeByteArray(channel));
+                ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), playerEntity, (buf) -> {
+                    buf.writeByteArray(channel);
+                    buf.writeBlockPos(playerEntity.getBlockPos());
+                });
             }
         }
         return new TypedActionResult<>(ActionResult.SUCCESS, stack);

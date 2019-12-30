@@ -1,14 +1,15 @@
 package net.kyrptonaught.linkedstorage.block;
 
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import net.kyrptonaught.linkedstorage.inventory.LinkedContainer;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventory;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
 import net.kyrptonaught.linkedstorage.util.ChannelManager;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 
-public class StorageBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
+public class StorageBlockEntity extends OpenableBlockEntity implements BlockEntityClientSerializable {
     private byte[] dyeChannel = LinkedInventoryHelper.getDefaultChannel();
     private LinkedInventory linkedInventory;
 
@@ -75,5 +76,10 @@ public class StorageBlockEntity extends BlockEntity implements BlockEntityClient
     @Override
     public CompoundTag toClientTag(CompoundTag tag) {
         return toTag(tag);
+    }
+
+    @Override
+    public boolean isPlayerViewing(PlayerEntity player) {
+        return ((LinkedContainer) player.container).linkedBlock.equals(pos);
     }
 }

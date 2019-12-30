@@ -1,11 +1,17 @@
-package net.kyrptonaught.linkedstorage.block;
+package net.kyrptonaught.linkedstorage.client;
 
+import net.kyrptonaught.linkedstorage.LinkedStorageModClient;
+import net.kyrptonaught.linkedstorage.block.StorageBlock;
+import net.kyrptonaught.linkedstorage.block.StorageBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.TexturedRenderLayers;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.DyeColor;
@@ -15,18 +21,11 @@ import net.minecraft.world.World;
 
 
 public class StorageBlockRenderer extends BlockEntityRenderer<StorageBlockEntity> {
-
+    private static final Identifier WOOL_TEXTURE = new Identifier("textures/block/white_wool.png");
     private ModelPart button1, button2, button3;
-    private static final Identifier TEXTURE = new Identifier("textures/block/white_wool.png");
 
     public StorageBlockRenderer(BlockEntityRenderDispatcher dispatcher) {
         super(dispatcher);
-        button1 = new ModelPart(64, 64, 0, 19);
-        button1.addCuboid(10, 14, 6, 2, 1, 4, 0);
-        button2 = new ModelPart(64, 64, 0, 19);
-        button2.addCuboid(7, 14, 6, 2, 1, 4, 0);
-        button3 = new ModelPart(64, 64, 0, 19);
-        button3.addCuboid(4, 14, 6, 2, 1, 4, 0);
 
     }
 
@@ -41,15 +40,22 @@ public class StorageBlockRenderer extends BlockEntityRenderer<StorageBlockEntity
         BlockPos pos = blockEntity.getPos();
         BlockState state = world.getBlockState(pos);
 
+        LinkedChestModel model = new LinkedChestModel();
+
         matrices.push();
-        float f = state.get(StorageBlock.FACING).getOpposite().asRotation();
+        float f = state.get(StorageBlock.FACING).asRotation();
         matrices.translate(0.5D, 0.5D, 0.5D);
         matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-f));
         matrices.translate(-0.5D, -0.5D, -0.5D);
 
-        button1.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(TEXTURE)), light, overlay, color1[0], color1[1], color1[2], 1);
-        button2.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(TEXTURE)), light, overlay, color2[0], color2[1], color2[2], 1);
-        button3.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(TEXTURE)), light, overlay, color3[0], color3[1], color3[2], 1);
+        model.setLidPitch(blockEntity.getAnimationProgress(tickDelta));
+        SpriteIdentifier spriteIdentifier = new SpriteIdentifier(TexturedRenderLayers.CHEST_ATLAS_TEXTURE, LinkedStorageModClient.TEXTURE);
+        VertexConsumer vertexConsumer = spriteIdentifier.getVertexConsumer(vertexConsumers, RenderLayer::getEntityCutout);
+        model.render(matrices, vertexConsumer, light, overlay);
+
+        model.button1.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(WOOL_TEXTURE)), light, overlay, color1[0], color1[1], color1[2], 1);
+        model.button2.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(WOOL_TEXTURE)), light, overlay, color2[0], color2[1], color2[2], 1);
+        model.button3.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(WOOL_TEXTURE)), light, overlay, color3[0], color3[1], color3[2], 1);
         matrices.pop();
     }
 }

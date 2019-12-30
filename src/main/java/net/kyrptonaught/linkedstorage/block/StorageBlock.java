@@ -71,7 +71,12 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
             if (stack.getItem() instanceof DyeItem) {
                 if (!checkButons(state, pos, hit))
                     OpenStoragePacket.sendPacket(pos);
-            } else OpenStoragePacket.sendPacket(pos);
+            } else {
+                //  StorageBlockEntity be = (StorageBlockEntity) world.getBlockEntity(pos);
+                // if (be.viewerCount < 0) be.viewerCount = 0;
+                // ++be.viewerCount;
+                OpenStoragePacket.sendPacket(pos);
+            }
         return ActionResult.SUCCESS;
 
     }
