@@ -36,7 +36,6 @@ public class OpenableBlockEntity extends BlockEntity implements ChestAnimationPr
     @Override
     @Environment(EnvType.CLIENT)
     public void tick() {
-        System.out.println(world.isClient);
         if (world != null && world.isClient) {
             int viewerCount = countViewers();
             lastAnimationAngle = animationAngle;

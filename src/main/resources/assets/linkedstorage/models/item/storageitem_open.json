@@ -1,0 +1,9 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "linkedstorage:item/portablestorage_open",
+    "layer1": "linkedstorage:item/portablestorage_b1_open",
+    "layer2": "linkedstorage:item/portablestorage_b2_open",
+    "layer3": "linkedstorage:item/portablestorage_b3_open"
+  }
+}

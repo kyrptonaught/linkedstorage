@@ -5,5 +5,13 @@
     "layer1": "linkedstorage:item/portablestorage_b1",
     "layer2": "linkedstorage:item/portablestorage_b2",
     "layer3": "linkedstorage:item/portablestorage_b3"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "open": 1
+      },
+      "model": "linkedstorage:item/storageitem_open"
+    }
+  ]
 }

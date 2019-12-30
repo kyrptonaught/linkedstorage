@@ -20,7 +20,7 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 
 public class LinkedStorageModClient implements ClientModInitializer {
-    public static final Identifier TEXTURE = new Identifier(LinkedStorageMod.MOD_ID, "block/chest");
+    public static final Identifier TEXTURE = new Identifier(LinkedStorageMod.MOD_ID, "block/linkedstorage");
     public static BlockEntityType<DummyStorageBlockEntity> dummy = BlockEntityType.Builder.create(DummyStorageBlockEntity::new, ModBlocks.storageBlock).build(null);
 
     @Override

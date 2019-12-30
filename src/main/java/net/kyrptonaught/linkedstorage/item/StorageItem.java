@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.block.StorageBlock;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
+import net.kyrptonaught.linkedstorage.network.ChannelViewers;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -23,6 +24,10 @@ public class StorageItem extends Item {
     public StorageItem(Settings item$Settings_1) {
         super(item$Settings_1);
         Registry.register(Registry.ITEM, new Identifier(LinkedStorageMod.MOD_ID, "storageitem"), this);
+        this.addPropertyGetter(new Identifier("open"), (stack, world, entity) -> {
+            String channel = LinkedInventoryHelper.getChannelName(LinkedInventoryHelper.getItemChannelOrDefault(stack));
+            return ChannelViewers.getViewersFor(channel) ? 1 : 0;
+        });
     }
 
     @Override
@@ -41,10 +46,8 @@ public class StorageItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
         ItemStack stack = playerEntity.getStackInHand(hand);
         if (!world.isClient) {
-            if (LinkedInventoryHelper.itemHasChannel(stack)) {
-                byte[] channel = LinkedInventoryHelper.getItemChannel(stack);
-                ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), playerEntity, (buf) -> buf.writeByteArray(channel));
-            }
+            byte[] channel = LinkedInventoryHelper.getItemChannelOrDefault(stack);
+            ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), playerEntity, (buf) -> buf.writeByteArray(channel));
         }
         return new TypedActionResult<>(ActionResult.SUCCESS, stack);
     }
