@@ -10,10 +10,10 @@ import net.kyrptonaught.linkedstorage.client.DummyStorageBlockEntity;
 import net.kyrptonaught.linkedstorage.client.DummyStorageBlockEntityRenderer;
 import net.kyrptonaught.linkedstorage.client.StorageBlockRenderer;
 import net.kyrptonaught.linkedstorage.client.StorageContainerScreen;
-import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
 import net.kyrptonaught.linkedstorage.network.UpdateViewerList;
 import net.kyrptonaught.linkedstorage.register.ModBlocks;
 import net.kyrptonaught.linkedstorage.register.ModItems;
+import net.kyrptonaught.linkedstorage.util.LinkedInventoryHelper;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.util.DyeColor;
@@ -21,10 +21,11 @@ import net.minecraft.util.Identifier;
 
 public class LinkedStorageModClient implements ClientModInitializer {
     public static final Identifier TEXTURE = new Identifier(LinkedStorageMod.MOD_ID, "block/linkedstorage");
-    public static BlockEntityType<DummyStorageBlockEntity> dummy = BlockEntityType.Builder.create(DummyStorageBlockEntity::new, ModBlocks.storageBlock).build(null);
+    public static BlockEntityType<DummyStorageBlockEntity> dummy;
 
     @Override
     public void onInitializeClient() {
+        dummy = BlockEntityType.Builder.create(DummyStorageBlockEntity::new, ModBlocks.storageBlock).build(null);
         BlockEntityRendererRegistry.INSTANCE.register(dummy, DummyStorageBlockEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(StorageBlock.blockEntity, StorageBlockRenderer::new);
         ScreenProviderRegistry.INSTANCE.registerFactory(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), (syncId, identifier, player, buf) -> {
@@ -33,9 +34,9 @@ public class LinkedStorageModClient implements ClientModInitializer {
         });
 
         ColorProviderRegistryImpl.ITEM.register((stack, layer) -> {
-            if (layer == 0 || !LinkedInventoryHelper.itemHasChannel(stack))
+            if (layer == 0)
                 return DyeColor.WHITE.getMaterialColor().color;
-            byte[] colors = LinkedInventoryHelper.getItemChannel(stack);
+            byte[] colors = LinkedInventoryHelper.getItemChannel(stack).dyeChannel;
             return DyeColor.byId(colors[layer - 1]).getMaterialColor().color;
         }, ModItems.storageItem);
         ClientSpriteRegistryCallback.event(TexturedRenderLayers.CHEST_ATLAS_TEXTURE).register((atlasTexture, registry) -> {
@@ -43,6 +44,4 @@ public class LinkedStorageModClient implements ClientModInitializer {
         });
         UpdateViewerList.registerReceivePacket();
     }
-
-
 }

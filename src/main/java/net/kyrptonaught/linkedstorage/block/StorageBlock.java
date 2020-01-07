@@ -3,10 +3,10 @@ package net.kyrptonaught.linkedstorage.block;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
-import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
 import net.kyrptonaught.linkedstorage.network.OpenStoragePacket;
 import net.kyrptonaught.linkedstorage.network.SetDyePacket;
-import net.kyrptonaught.linkedstorage.register.ModBlocks;
+import net.kyrptonaught.linkedstorage.util.DyeChannel;
+import net.kyrptonaught.linkedstorage.util.LinkedInventoryHelper;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -19,7 +19,10 @@ import net.minecraft.item.*;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -73,9 +76,6 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
                 if (!checkButons(state, pos, hit))
                     OpenStoragePacket.sendPacket(pos);
             } else {
-                //  StorageBlockEntity be = (StorageBlockEntity) world.getBlockEntity(pos);
-                // if (be.viewerCount < 0) be.viewerCount = 0;
-                // ++be.viewerCount;
                 OpenStoragePacket.sendPacket(pos);
             }
         return ActionResult.SUCCESS;
@@ -85,9 +85,7 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState blockState_1, LivingEntity livingEntity_1, ItemStack stack) {
         if (!world.isClient()) {
-            if (LinkedInventoryHelper.itemHasChannel(stack))
-                LinkedInventoryHelper.setBlockChannel(LinkedInventoryHelper.getItemChannel(stack), world, pos);
-            else LinkedInventoryHelper.setBlockChannel(LinkedInventoryHelper.getDefaultChannel(), world, pos);
+            LinkedInventoryHelper.setBlockChannel(LinkedInventoryHelper.getItemChannel(stack), world, pos);
         }
     }
 
@@ -103,7 +101,7 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
 
     @Environment(EnvType.CLIENT)
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        byte[] dyechannel = LinkedInventoryHelper.getBlockChannel((World) world, pos);
+        DyeChannel dyechannel = LinkedInventoryHelper.getBlockChannel((World) world, pos);
         ItemStack stack = new ItemStack(this);
         LinkedInventoryHelper.setItemChannel(dyechannel, stack);
         return stack;
@@ -122,10 +120,10 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
             Block.createCuboidShape(7, 14, 6, 9, 15, 10),
             Block.createCuboidShape(10, 14, 6, 12, 15, 10)};
     private VoxelShape SHAPE = VoxelShapes.union(Block.createCuboidShape(1, 0, 1, 15, 14, 15), BUTTONS);
-    private VoxelShape[] BUTTONSEW = new VoxelShape[]{ModBlocks.rotate(Direction.EAST, 4, 14, 6, 6, 15, 10),
-            ModBlocks.rotate(Direction.EAST, 7, 14, 6, 9, 15, 10),
-            ModBlocks.rotate(Direction.EAST, 10, 14, 6, 12, 15, 10)};
-    private VoxelShape SHAPEEW = VoxelShapes.union(ModBlocks.rotate(Direction.EAST, 1, 0, 1, 15, 14, 15), BUTTONSEW);
+    private VoxelShape[] BUTTONSEW = new VoxelShape[]{Block.createCuboidShape(6, 14, 4, 10, 15, 6),
+            Block.createCuboidShape(6, 14, 7, 10, 15, 9),
+            Block.createCuboidShape(6, 14, 10, 10, 15, 12)};
+    private VoxelShape SHAPEEW = VoxelShapes.union(Block.createCuboidShape(1, 0, 1, 15, 14, 15), BUTTONSEW);
 
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext ePos) {
         if (state.get(FACING).equals(Direction.EAST) || state.get(FACING).equals(Direction.WEST))
@@ -135,12 +133,8 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
 
     @Environment(EnvType.CLIENT)
     public void buildTooltip(ItemStack stack, BlockView view, List<Text> tooltip, TooltipContext options) {
-        byte[] channel;
-        if (LinkedInventoryHelper.itemHasChannel(stack))
-            channel = LinkedInventoryHelper.getItemChannel(stack);
-        else channel = LinkedInventoryHelper.getDefaultChannel();
-        String name = DyeColor.byId(channel[0]).getName() + ", " + DyeColor.byId(channel[1]).getName() + ", " + DyeColor.byId(channel[2]).getName();
-        tooltip.add(new TranslatableText("text.linkeditem.channel", name).formatted(Formatting.GRAY));
+        DyeChannel channel = LinkedInventoryHelper.getItemChannel(stack);
+        tooltip.add(new TranslatableText("text.linkeditem.channel", channel.getCleanName()).formatted(Formatting.GRAY));
     }
 
     @Override

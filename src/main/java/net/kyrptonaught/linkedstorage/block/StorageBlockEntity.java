@@ -4,14 +4,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventory;
-import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
 import net.kyrptonaught.linkedstorage.network.ChannelViewers;
 import net.kyrptonaught.linkedstorage.util.ChannelManager;
+import net.kyrptonaught.linkedstorage.util.DyeChannel;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.CompoundTag;
 
 public class StorageBlockEntity extends OpenableBlockEntity implements BlockEntityClientSerializable {
-    private byte[] dyeChannel = LinkedInventoryHelper.getDefaultChannel();
+    private DyeChannel dyeChannel = DyeChannel.defaultChannel();
     private LinkedInventory linkedInventory;
 
     private StorageBlockEntity(BlockEntityType<?> blockEntityType_1) {
@@ -24,13 +24,7 @@ public class StorageBlockEntity extends OpenableBlockEntity implements BlockEnti
 
     public void fromTag(CompoundTag compoundTag_1) {
         super.fromTag(compoundTag_1);
-        if (compoundTag_1.contains("dyechannel", 11)) {
-            int[] oldChannel = compoundTag_1.getIntArray("dyechannel");
-            this.dyeChannel = new byte[]{(byte) oldChannel[0], (byte) oldChannel[1], (byte) oldChannel[2]};
-        }
-        if (compoundTag_1.contains("dyechannel", 7)) {
-            this.dyeChannel = compoundTag_1.getByteArray("dyechannel");
-        }
+        dyeChannel = DyeChannel.fromTag(compoundTag_1);
         this.markDirty();
     }
 
@@ -47,25 +41,25 @@ public class StorageBlockEntity extends OpenableBlockEntity implements BlockEnti
 
     public CompoundTag toTag(CompoundTag compoundTag_1) {
         super.toTag(compoundTag_1);
-        compoundTag_1.putByteArray("dyechannel", dyeChannel);
+        dyeChannel.toTag(compoundTag_1);
         return compoundTag_1;
     }
 
     public void setDye(int slot, int dye) {
-        this.dyeChannel[slot] = (byte) dye;
+        dyeChannel.setSlot(slot, (byte) dye);
         updateInventory();
         this.markDirty();
         if (!world.isClient) sync();
     }
 
-    public void setChannel(byte[] channel) {
+    public void setChannel(DyeChannel channel) {
         this.dyeChannel = channel;
         updateInventory();
         this.markDirty();
         if (!world.isClient) sync();
     }
 
-    public byte[] getChannel() {
+    public DyeChannel getChannel() {
         return dyeChannel;
     }
 
@@ -82,6 +76,6 @@ public class StorageBlockEntity extends OpenableBlockEntity implements BlockEnti
     @Override
     @Environment(EnvType.CLIENT)
     public int countViewers() {
-        return ChannelViewers.getViewersFor(LinkedInventoryHelper.getChannelName(dyeChannel)) ? 1 : 0;
+        return ChannelViewers.getViewersFor(dyeChannel.getChannelName()) ? 1 : 0;
     }
 }

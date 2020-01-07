@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kyrptonaught.linkedstorage.block.StorageBlock;
 import net.kyrptonaught.linkedstorage.client.DummyStorageBlockEntity;
-import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
+import net.kyrptonaught.linkedstorage.util.LinkedInventoryHelper;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
@@ -25,7 +25,7 @@ public class StorageBlockItemRenderMixin {
     @Inject(at = @At("HEAD"), method = "render", cancellable = true)
     private void render(ItemStack itemStack, MatrixStack matrixStack, VertexConsumerProvider consumerProvider, int light, int overlay, CallbackInfo info) {
         if (itemStack.getItem() instanceof BlockItem && ((BlockItem) itemStack.getItem()).getBlock() instanceof StorageBlock) {
-            DUMMY.setChannel(LinkedInventoryHelper.getItemChannelOrDefault(itemStack));
+            DUMMY.setChannel(LinkedInventoryHelper.getItemChannel(itemStack));
             BlockEntityRenderDispatcher.INSTANCE.renderEntity(DUMMY, matrixStack, consumerProvider, light, overlay);
             info.cancel();
         }

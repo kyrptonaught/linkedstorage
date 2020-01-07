@@ -5,7 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
-import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
+import net.kyrptonaught.linkedstorage.util.LinkedInventoryHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeItem;

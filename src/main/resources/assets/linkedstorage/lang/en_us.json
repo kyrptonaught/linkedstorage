@@ -1,9 +1,6 @@
 {
   "container.linkedstorage": "Linked Storage",
   "itemGroup.linkedstorage.linkedstorage": "Linked Storage",
-  "text.linkedstorage.copied": "Copied Storage link: %s",
-  "text.linkedstorage.set": "Set Storage to: %s",
-  "text.linkedstorage.nochannel": "Item not linked to channel",
   "item.linkedstorage.storageitem": "Handheld Storage",
   "block.linkedstorage.storageblock": "Storage Block",
   "text.linkeditem.channel": "Set to: %s"

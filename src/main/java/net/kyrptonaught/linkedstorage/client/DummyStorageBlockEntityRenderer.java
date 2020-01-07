@@ -25,7 +25,7 @@ public class DummyStorageBlockEntityRenderer extends BlockEntityRenderer<DummySt
 
     @Override
     public void render(DummyStorageBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        byte[] dyes = blockEntity.getChannel();
+        byte[] dyes = blockEntity.getChannel().dyeChannel;
         float[] color1 = DyeColor.byId(dyes[0]).getColorComponents();
         float[] color2 = DyeColor.byId(dyes[1]).getColorComponents();
         float[] color3 = DyeColor.byId(dyes[2]).getColorComponents();

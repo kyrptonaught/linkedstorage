@@ -5,7 +5,6 @@ import nerdhub.cardinal.components.api.ComponentType;
 import nerdhub.cardinal.components.api.event.LevelComponentCallback;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventory;
-import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -34,8 +33,8 @@ public class ChannelManager implements StorageManagerComponent {
         return this;
     }
 
-    public LinkedInventory getInv(byte[] dyeChannel) {
-        String channel = LinkedInventoryHelper.getChannelName(dyeChannel);
+    public LinkedInventory getInv(DyeChannel dyeChannel) {
+        String channel = dyeChannel.getChannelName();
         if (!inventories.containsKey(channel))
             inventories.put(channel, new LinkedInventory());
         return inventories.get(channel);

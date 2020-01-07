@@ -18,6 +18,10 @@ repositories {
 		name = "NerdHubMC"
 		url = "https://maven.abusedmaster.xyz"
 	}
+	maven {
+        name = "BuildCraft"
+        url = "https://mod-buildcraft.com/maven"
+    }
 }
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -33,7 +37,8 @@ dependencies {
 
 	//modApi "blue.endless:jankson:+"
 	//include "blue.endless:jankson:+"
-
+	//modCompile "alexiil.mc.lib:libblockattributes-fluids:+"
+	//include "alexiil.mc.lib:libblockattributes-fluids:+"
 	modApi 'com.github.Siphalor:nbt-crafting:1.15-SNAPSHOT'
 	include 'com.github.Siphalor:nbt-crafting:1.15-SNAPSHOT'
 	modApi "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-base:+"

@@ -6,7 +6,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
-import net.kyrptonaught.linkedstorage.inventory.LinkedInventoryHelper;
+import net.kyrptonaught.linkedstorage.util.LinkedInventoryHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
@@ -24,7 +24,7 @@ public class OpenStoragePacket {
             packetContext.getTaskQueue().execute(() -> {
                 PlayerEntity player = packetContext.getPlayer();
                 World world = player.getEntityWorld();
-                ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), packetContext.getPlayer(), (buf) -> buf.writeByteArray(LinkedInventoryHelper.getBlockChannel(world, pos)));
+                ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), packetContext.getPlayer(), (buf) -> buf.writeByteArray(LinkedInventoryHelper.getBlockChannel(world, pos).dyeChannel));
             });
         });
     }

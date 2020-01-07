@@ -20,9 +20,9 @@ public class UpdateViewerList {
             boolean adding = packetByteBuf.readBoolean();
             packetContext.getTaskQueue().execute(() -> {
                 if (adding)
-                    ChannelViewers.addViewerFor(channel, uuid.toString());
+                    ChannelViewers.addViewerFor(channel, uuid);
                 else
-                    ChannelViewers.removeViewerFor(channel, uuid.toString());
+                    ChannelViewers.removeViewerFor(channel, uuid);
             });
         });
     }
