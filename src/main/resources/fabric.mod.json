@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "linkedstorage",
-  "version": "1.0.0b7",
+  "version": "1.0.1",
   "name": "Linked Storage",
   "description": "Linkable storage's!",
   "authors": [
@@ -14,12 +14,6 @@
   "license": "MIT",
   "icon": "assets/linkedstorage/icon.png",
   "environment": "*",
-  "mixins": [
-    {
-      "config": "net.kyrptonaught.linkedstorage.json",
-      "environment": "client"
-    }
-  ],
   "entrypoints": {
     "main": [
       "net.kyrptonaught.linkedstorage.LinkedStorageMod"
