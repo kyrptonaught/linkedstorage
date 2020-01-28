@@ -1,5 +1,5 @@
 {
-  "type": "crafting_shaped",
+  "type": "linkedstorage:copy_dye_recipe",
   "pattern": [
     "SSS",
     "BCB",
@@ -17,9 +17,6 @@
     }
   },
   "result": {
-    "item": "linkedstorage:storageitem",
-    "data": {
-      "dyechannel": "$ i4.dyechannel"
-    }
+    "item": "linkedstorage:storageitem"
   }
 }

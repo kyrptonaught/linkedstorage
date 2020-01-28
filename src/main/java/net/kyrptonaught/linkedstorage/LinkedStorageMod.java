@@ -7,6 +7,8 @@ import net.kyrptonaught.linkedstorage.inventory.LinkedContainer;
 import net.kyrptonaught.linkedstorage.network.ChannelViewers;
 import net.kyrptonaught.linkedstorage.network.OpenStoragePacket;
 import net.kyrptonaught.linkedstorage.network.SetDyePacket;
+import net.kyrptonaught.linkedstorage.recipe.CopyDyeRecipe;
+import net.kyrptonaught.linkedstorage.recipe.TriDyableRecipe;
 import net.kyrptonaught.linkedstorage.register.ModBlocks;
 import net.kyrptonaught.linkedstorage.register.ModItems;
 import net.kyrptonaught.linkedstorage.util.ChannelManager;
@@ -14,11 +16,15 @@ import net.kyrptonaught.linkedstorage.util.DyeChannel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.*;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 public class LinkedStorageMod implements ModInitializer {
     public static final String MOD_ID = "linkedstorage";
     public static final ItemGroup GROUP = FabricItemGroupBuilder.build(new Identifier(MOD_ID, "linkedstorage"), () -> new ItemStack(ModBlocks.storageBlock));
+    public static SpecialRecipeSerializer<TriDyableRecipe> triDyeRecipe;
+    public static RecipeSerializer<CopyDyeRecipe> copyDyeRecipe;
 
     @Override
     public void onInitialize() {
@@ -29,6 +35,8 @@ public class LinkedStorageMod implements ModInitializer {
         SetDyePacket.registerReceivePacket();
         OpenStoragePacket.registerReceivePacket();
         ChannelViewers.registerChannelWatcher();
+        triDyeRecipe = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "tri_dyable_recipe"), new SpecialRecipeSerializer<>(TriDyableRecipe::new));
+        copyDyeRecipe = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "copy_dye_recipe"), new CopyDyeRecipe.Serializer());
     }
 
     static LinkedContainer getContainer(int id, PlayerEntity player, byte[] channel) {

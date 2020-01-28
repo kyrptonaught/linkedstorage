@@ -3,14 +3,14 @@ package net.kyrptonaught.linkedstorage.client;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
-public class StorageContainerScreen extends AbstractContainerScreen<Container> {
+public class StorageContainerScreen extends ContainerScreen<Container> {
     private static final Identifier TEXTURE = new Identifier("textures/gui/container/generic_54.png");
     private final int rows = 3;
     public byte[] channel;
