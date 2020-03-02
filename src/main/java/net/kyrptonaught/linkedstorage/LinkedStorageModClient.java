@@ -1,6 +1,8 @@
 package net.kyrptonaught.linkedstorage;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
@@ -16,6 +18,7 @@ import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 
+@Environment(EnvType.CLIENT)
 public class LinkedStorageModClient implements ClientModInitializer {
     public static final Identifier TEXTURE = new Identifier(LinkedStorageMod.MOD_ID, "block/linkedstorage");
 

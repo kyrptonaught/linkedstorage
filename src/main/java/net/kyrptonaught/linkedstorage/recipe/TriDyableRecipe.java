@@ -42,7 +42,6 @@ public class TriDyableRecipe extends SpecialCraftingRecipe {
 
     @Override
     public boolean fits(int width, int height) {
-        System.out.println(width + " "  +height);
         return true;
     }
 

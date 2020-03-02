@@ -41,21 +41,23 @@ public class StorageBlockRenderer extends BlockEntityRenderer<StorageBlockEntity
         BlockState state = world.getBlockState(pos);
 
         LinkedChestModel model = new LinkedChestModel();
+        //fixes crash with carpet
+        if(state.getBlock() instanceof StorageBlock) {
+            matrices.push();
+            float f = state.get(StorageBlock.FACING).asRotation();
+            matrices.translate(0.5D, 0.5D, 0.5D);
+            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-f));
+            matrices.translate(-0.5D, -0.5D, -0.5D);
 
-        matrices.push();
-        float f = state.get(StorageBlock.FACING).asRotation();
-        matrices.translate(0.5D, 0.5D, 0.5D);
-        matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-f));
-        matrices.translate(-0.5D, -0.5D, -0.5D);
+            model.setLidPitch(blockEntity.getAnimationProgress(tickDelta));
+            SpriteIdentifier spriteIdentifier = new SpriteIdentifier(TexturedRenderLayers.CHEST_ATLAS_TEXTURE, LinkedStorageModClient.TEXTURE);
+            VertexConsumer vertexConsumer = spriteIdentifier.getVertexConsumer(vertexConsumers, RenderLayer::getEntityCutout);
+            model.render(matrices, vertexConsumer, light, overlay);
 
-        model.setLidPitch(blockEntity.getAnimationProgress(tickDelta));
-        SpriteIdentifier spriteIdentifier = new SpriteIdentifier(TexturedRenderLayers.CHEST_ATLAS_TEXTURE, LinkedStorageModClient.TEXTURE);
-        VertexConsumer vertexConsumer = spriteIdentifier.getVertexConsumer(vertexConsumers, RenderLayer::getEntityCutout);
-        model.render(matrices, vertexConsumer, light, overlay);
-
-        model.button1.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(WOOL_TEXTURE)), light, overlay, color1[0], color1[1], color1[2], 1);
-        model.button2.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(WOOL_TEXTURE)), light, overlay, color2[0], color2[1], color2[2], 1);
-        model.button3.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(WOOL_TEXTURE)), light, overlay, color3[0], color3[1], color3[2], 1);
-        matrices.pop();
+            model.button1.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(WOOL_TEXTURE)), light, overlay, color1[0], color1[1], color1[2], 1);
+            model.button2.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(WOOL_TEXTURE)), light, overlay, color2[0], color2[1], color2[2], 1);
+            model.button3.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(WOOL_TEXTURE)), light, overlay, color3[0], color3[1], color3[2], 1);
+            matrices.pop();
+        }
     }
 }

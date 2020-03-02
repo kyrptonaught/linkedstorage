@@ -23,8 +23,10 @@ import java.util.Map;
 import java.util.Set;
 
 public class CopyDyeRecipe extends ShapedRecipe {
+    String group;
     public CopyDyeRecipe(Identifier id, String group, int width, int height, DefaultedList<Ingredient> ingredients, ItemStack output) {
         super(id, group, width, height, ingredients, output);
+        this.group = group;
     }
 
     public ItemStack craft(CraftingInventory craftingInventory) {
@@ -188,7 +190,7 @@ public class CopyDyeRecipe extends ShapedRecipe {
         public void write(PacketByteBuf packetByteBuf, CopyDyeRecipe shapedRecipe) {
             packetByteBuf.writeVarInt(shapedRecipe.getWidth());
             packetByteBuf.writeVarInt(shapedRecipe.getHeight());
-            packetByteBuf.writeString(shapedRecipe.getGroup());
+            packetByteBuf.writeString(shapedRecipe.group);
             Iterator var3 = shapedRecipe.getPreviewInputs().iterator();
 
             while (var3.hasNext()) {
