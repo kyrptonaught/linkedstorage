@@ -33,9 +33,9 @@ public class TriDyableRecipe extends SpecialCraftingRecipe {
     public ItemStack craft(CraftingInventory inv) {
         ItemStack newStack = inv.getInvStack(4).copy();
         DyeChannel dyeChannel = LinkedInventoryHelper.getItemChannel(newStack).clone();
-        for(int i=0; i < 3;i++)
-        if(inv.getInvStack(i).getItem() instanceof DyeItem)
-            dyeChannel.setSlot(i, (byte) ((DyeItem)inv.getInvStack(i).getItem()).getColor().getId());
+        for (int i = 0; i < 3; i++)
+            if (inv.getInvStack(i).getItem() instanceof DyeItem)
+                dyeChannel.setSlot(i, (byte) ((DyeItem) inv.getInvStack(i).getItem()).getColor().getId());
         LinkedInventoryHelper.setItemChannel(dyeChannel, newStack);
         return newStack;
     }

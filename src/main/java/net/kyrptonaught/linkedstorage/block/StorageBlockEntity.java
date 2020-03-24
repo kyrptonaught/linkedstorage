@@ -3,9 +3,9 @@ package net.kyrptonaught.linkedstorage.block;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventory;
 import net.kyrptonaught.linkedstorage.network.ChannelViewers;
-import net.kyrptonaught.linkedstorage.util.ChannelManager;
 import net.kyrptonaught.linkedstorage.util.DyeChannel;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.CompoundTag;
@@ -35,7 +35,7 @@ public class StorageBlockEntity extends OpenableBlockEntity implements BlockEnti
 
     private void updateInventory() {
         if (!world.isClient) {
-            linkedInventory = ChannelManager.getManager(world.getLevelProperties()).getInv(dyeChannel);
+            linkedInventory = LinkedStorageMod.getInventory(dyeChannel);
         }
     }
 

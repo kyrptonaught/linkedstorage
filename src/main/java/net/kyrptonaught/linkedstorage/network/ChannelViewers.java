@@ -8,9 +8,10 @@ import net.minecraft.server.MinecraftServer;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ChannelViewers {
-    private static HashMap<String, HashSet<UUID>> viewers = new HashMap<>();
+    private static final ConcurrentHashMap<String, HashSet<UUID>> viewers = new ConcurrentHashMap<>();
 
     public static Boolean getViewersFor(String channel) {
         if (!viewers.containsKey(channel)) return false;

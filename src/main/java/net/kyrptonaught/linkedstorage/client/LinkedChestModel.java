@@ -10,9 +10,9 @@ import net.minecraft.client.util.math.MatrixStack;
 
 @Environment(EnvType.CLIENT)
 public class LinkedChestModel extends Model {
-    private ModelPart lid;
+    private final ModelPart lid;
     protected ModelPart base;
-    private ModelPart latch;
+    private final ModelPart latch;
     public ModelPart button1, button2, button3;
 
     public LinkedChestModel() {

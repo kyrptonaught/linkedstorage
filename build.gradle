@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.2.6-SNAPSHOT'
+	id 'fabric-loom' version '0.2.7-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -29,22 +29,10 @@ dependencies {
 	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
 	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	//modImplementation "io.github.prospector.modmenu:ModMenu:+"
-	modImplementation "me.shedaniel:RoughlyEnoughItems:+"
+	modImplementation "me.shedaniel:RoughlyEnoughItems:3.6.4"
 
-	//modImplementation ('me.shedaniel.cloth:config-2:+'){transitive = false}
-	//include 'me.shedaniel.cloth:config-2:+'
-
-	//modApi "blue.endless:jankson:+"
-	//include "blue.endless:jankson:+"
 	//modCompile "alexiil.mc.lib:libblockattributes-fluids:+"
 	//include "alexiil.mc.lib:libblockattributes-fluids:+"
-	modApi "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-base:+"
-	modApi "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-level:+"
-	modApi "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-world:+"
-	include "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-base:+"
-	include "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-level:+"
-	include "com.github.NerdHubMC.Cardinal-Components-API:cardinal-components-world:+"
 }
 
 processResources {

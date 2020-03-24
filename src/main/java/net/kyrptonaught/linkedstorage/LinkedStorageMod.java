@@ -3,7 +3,9 @@ package net.kyrptonaught.linkedstorage;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import net.fabricmc.fabric.api.event.server.ServerStartCallback;
 import net.kyrptonaught.linkedstorage.inventory.LinkedContainer;
+import net.kyrptonaught.linkedstorage.inventory.LinkedInventory;
 import net.kyrptonaught.linkedstorage.network.ChannelViewers;
 import net.kyrptonaught.linkedstorage.network.OpenStoragePacket;
 import net.kyrptonaught.linkedstorage.network.SetDyePacket;
@@ -13,35 +15,46 @@ import net.kyrptonaught.linkedstorage.register.ModBlocks;
 import net.kyrptonaught.linkedstorage.register.ModItems;
 import net.kyrptonaught.linkedstorage.util.ChannelManager;
 import net.kyrptonaught.linkedstorage.util.DyeChannel;
+import net.kyrptonaught.linkedstorage.util.Migrator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.*;
+import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.recipe.SpecialRecipeSerializer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.dimension.DimensionType;
 
 public class LinkedStorageMod implements ModInitializer {
     public static final String MOD_ID = "linkedstorage";
     public static final ItemGroup GROUP = FabricItemGroupBuilder.build(new Identifier(MOD_ID, "linkedstorage"), () -> new ItemStack(ModBlocks.storageBlock));
     public static SpecialRecipeSerializer<TriDyableRecipe> triDyeRecipe;
     public static RecipeSerializer<CopyDyeRecipe> copyDyeRecipe;
+    private static ChannelManager CMAN; //lol
 
     @Override
     public void onInitialize() {
-        ChannelManager.init();
         ModBlocks.register();
         ModItems.register();
-        ContainerProviderRegistry.INSTANCE.registerFactory(new Identifier(MOD_ID, "linkedstorage"), (syncId, id, player, buf) -> getContainer(syncId, player, buf.readByteArray()));
+        ContainerProviderRegistry.INSTANCE.registerFactory(new Identifier(MOD_ID, "linkedstorage"), (syncId, id, player, buf) -> getContainer(syncId, player, DyeChannel.fromBuf(buf)));
         SetDyePacket.registerReceivePacket();
         OpenStoragePacket.registerReceivePacket();
         ChannelViewers.registerChannelWatcher();
         triDyeRecipe = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "tri_dyable_recipe"), new SpecialRecipeSerializer<>(TriDyableRecipe::new));
         copyDyeRecipe = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "copy_dye_recipe"), new CopyDyeRecipe.Serializer());
+
+        ServerStartCallback.EVENT.register(server -> {
+            CMAN = server.getWorld(DimensionType.OVERWORLD).getPersistentStateManager().getOrCreate(() -> new ChannelManager(MOD_ID), MOD_ID);
+            Migrator.Migrate(server.getWorld(DimensionType.OVERWORLD).getSaveHandler().getWorldDir(), CMAN);
+        });
     }
 
-    static LinkedContainer getContainer(int id, PlayerEntity player, byte[] channel) {
-        DyeChannel dyeChannel = new DyeChannel(channel);
-        ChannelViewers.addViewerFor(dyeChannel.getChannelName(), player);
-        return new LinkedContainer(id, player.inventory, ChannelManager.getManager(player.getEntityWorld().getLevelProperties()).getInv(dyeChannel), channel);
+    static LinkedContainer getContainer(int id, PlayerEntity player, DyeChannel channel) {
+        ChannelViewers.addViewerFor(channel.getChannelName(), player);
+        return new LinkedContainer(id, player.inventory, getInventory(channel));
+    }
+
+    public static LinkedInventory getInventory(DyeChannel dyeChannel) {
+        return CMAN.getInv(dyeChannel);
     }
 }

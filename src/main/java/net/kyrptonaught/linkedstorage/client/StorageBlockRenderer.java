@@ -41,8 +41,9 @@ public class StorageBlockRenderer extends BlockEntityRenderer<StorageBlockEntity
         BlockState state = world.getBlockState(pos);
 
         LinkedChestModel model = new LinkedChestModel();
+
         //fixes crash with carpet
-        if(state.getBlock() instanceof StorageBlock) {
+        if (state.getBlock() instanceof StorageBlock) {
             matrices.push();
             float f = state.get(StorageBlock.FACING).asRotation();
             matrices.translate(0.5D, 0.5D, 0.5D);

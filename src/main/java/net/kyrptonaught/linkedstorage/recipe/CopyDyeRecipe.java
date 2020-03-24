@@ -1,4 +1,5 @@
 package net.kyrptonaught.linkedstorage.recipe;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -24,6 +25,7 @@ import java.util.Set;
 
 public class CopyDyeRecipe extends ShapedRecipe {
     String group;
+
     public CopyDyeRecipe(Identifier id, String group, int width, int height, DefaultedList<Ingredient> ingredients, ItemStack output) {
         super(id, group, width, height, ingredients, output);
         this.group = group;
@@ -41,15 +43,15 @@ public class CopyDyeRecipe extends ShapedRecipe {
 
         while (var2.hasNext()) {
             Map.Entry<String, JsonElement> entry = (Map.Entry) var2.next();
-            if (((String) entry.getKey()).length() != 1) {
-                throw new JsonSyntaxException("Invalid key entry: '" + (String) entry.getKey() + "' is an invalid symbol (must be 1 character only).");
+            if (entry.getKey().length() != 1) {
+                throw new JsonSyntaxException("Invalid key entry: '" + entry.getKey() + "' is an invalid symbol (must be 1 character only).");
             }
 
             if (" ".equals(entry.getKey())) {
                 throw new JsonSyntaxException("Invalid key entry: ' ' is a reserved symbol.");
             }
 
-            map.put(entry.getKey(), Ingredient.fromJson((JsonElement) entry.getValue()));
+            map.put(entry.getKey(), Ingredient.fromJson(entry.getValue()));
         }
 
         map.put(" ", Ingredient.EMPTY);
@@ -140,7 +142,7 @@ public class CopyDyeRecipe extends ShapedRecipe {
         for (int i = 0; i < pattern.length; ++i) {
             for (int j = 0; j < pattern[i].length(); ++j) {
                 String string = pattern[i].substring(j, j + 1);
-                Ingredient ingredient = (Ingredient) key.get(string);
+                Ingredient ingredient = key.get(string);
                 if (ingredient == null) {
                     throw new JsonSyntaxException("Pattern references symbol '" + string + "' but it's not defined in the key");
                 }

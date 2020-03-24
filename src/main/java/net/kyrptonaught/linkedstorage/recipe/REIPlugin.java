@@ -10,6 +10,7 @@ public class REIPlugin implements REIPluginV0 {
     public Identifier getPluginIdentifier() {
         return new Identifier(LinkedStorageMod.MOD_ID, "rei_plugin");
     }
+
     @Override
     public void registerOthers(RecipeHelper recipeHelper) {
     }

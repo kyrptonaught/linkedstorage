@@ -11,6 +11,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.container.Container;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -71,6 +72,10 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack stack = player.getMainHandStack();
+        if (!world.isClient) {
+            if (player.isSneaking())
+                LinkedInventoryHelper.setBlockChannel(LinkedInventoryHelper.getBlockChannel(world, pos).toPlayerDyeChannel(player.getUuid()), world, pos);
+        }
         if (world.isClient)
             if (stack.getItem() instanceof DyeItem) {
                 if (!checkButons(state, pos, hit))
@@ -79,7 +84,6 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
                 OpenStoragePacket.sendPacket(pos);
             }
         return ActionResult.SUCCESS;
-
     }
 
     @Override
@@ -116,19 +120,29 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
         return BlockRenderType.MODEL;
     }
 
-    private VoxelShape[] BUTTONS = new VoxelShape[]{Block.createCuboidShape(4, 14, 6, 6, 15, 10),
+    private final VoxelShape[] BUTTONS = new VoxelShape[]{Block.createCuboidShape(4, 14, 6, 6, 15, 10),
             Block.createCuboidShape(7, 14, 6, 9, 15, 10),
             Block.createCuboidShape(10, 14, 6, 12, 15, 10)};
-    private VoxelShape SHAPE = VoxelShapes.union(Block.createCuboidShape(1, 0, 1, 15, 14, 15), BUTTONS);
-    private VoxelShape[] BUTTONSEW = new VoxelShape[]{Block.createCuboidShape(6, 14, 4, 10, 15, 6),
+    private final VoxelShape SHAPE = VoxelShapes.union(Block.createCuboidShape(1, 0, 1, 15, 14, 15), BUTTONS);
+    private final VoxelShape[] BUTTONSEW = new VoxelShape[]{Block.createCuboidShape(6, 14, 4, 10, 15, 6),
             Block.createCuboidShape(6, 14, 7, 10, 15, 9),
             Block.createCuboidShape(6, 14, 10, 10, 15, 12)};
-    private VoxelShape SHAPEEW = VoxelShapes.union(Block.createCuboidShape(1, 0, 1, 15, 14, 15), BUTTONSEW);
+    private final VoxelShape SHAPEEW = VoxelShapes.union(Block.createCuboidShape(1, 0, 1, 15, 14, 15), BUTTONSEW);
 
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext ePos) {
         if (state.get(FACING).equals(Direction.EAST) || state.get(FACING).equals(Direction.WEST))
             return SHAPEEW;
         return SHAPE;
+    }
+
+    @Override
+    public boolean hasComparatorOutput(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
+        return Container.calculateComparatorOutput(getInventory(state, world, pos));
     }
 
     @Environment(EnvType.CLIENT)

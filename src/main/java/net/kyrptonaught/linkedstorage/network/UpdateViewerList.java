@@ -3,7 +3,7 @@ package net.kyrptonaught.linkedstorage.network;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
-import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
+import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;

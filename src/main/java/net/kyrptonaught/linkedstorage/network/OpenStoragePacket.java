@@ -9,7 +9,7 @@ import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.util.LinkedInventoryHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
+import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
@@ -24,7 +24,7 @@ public class OpenStoragePacket {
             packetContext.getTaskQueue().execute(() -> {
                 PlayerEntity player = packetContext.getPlayer();
                 World world = player.getEntityWorld();
-                ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), packetContext.getPlayer(), (buf) -> buf.writeByteArray(LinkedInventoryHelper.getBlockChannel(world, pos).dyeChannel));
+                ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), packetContext.getPlayer(), (buf) -> LinkedInventoryHelper.getBlockChannel(world, pos).toBuf(buf));
             });
         });
     }

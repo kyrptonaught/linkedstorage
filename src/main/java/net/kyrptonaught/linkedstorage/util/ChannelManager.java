@@ -1,78 +1,81 @@
 package net.kyrptonaught.linkedstorage.util;
 
-import nerdhub.cardinal.components.api.ComponentRegistry;
-import nerdhub.cardinal.components.api.ComponentType;
-import nerdhub.cardinal.components.api.event.LevelComponentCallback;
-import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventory;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.DefaultedList;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.level.LevelProperties;
+import net.minecraft.world.PersistentState;
 
 import java.util.HashMap;
+import java.util.UUID;
 
-public class ChannelManager implements StorageManagerComponent {
-    private HashMap<String, LinkedInventory> inventories = new HashMap<>();
-    private static ComponentType<StorageManagerComponent> CHANNEL_MANAGER;
+public class ChannelManager extends PersistentState {
 
-    public static void init() {
-        CHANNEL_MANAGER = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier(LinkedStorageMod.MOD_ID, "sman"), StorageManagerComponent.class);
-        LevelComponentCallback.EVENT.register((levelProperties, components) -> components.put(CHANNEL_MANAGER, new ChannelManager()));
+    private final InventoryStorage globalInventories = new InventoryStorage(null);
+    private final HashMap<UUID, InventoryStorage> personalInventories = new HashMap<>();
+    public boolean migrated = false;
+    private final String saveVersion = "1.0";
+
+    public ChannelManager(String key) {
+        super(key);
     }
 
-    public static ChannelManager getManager(LevelProperties props) {
-        return CHANNEL_MANAGER.get(props).getValue();
-    }
-
-    @Override
-    public ChannelManager getValue() {
-        return this;
-    }
-
-    public LinkedInventory getInv(DyeChannel dyeChannel) {
-        String channel = dyeChannel.getChannelName();
-        if (!inventories.containsKey(channel))
-            inventories.put(channel, new LinkedInventory());
-        return inventories.get(channel);
-    }
-
-    @Override
+    /*
+      public CompoundTag readTag(String id, int dataVersion) {
+            try {
+                CompoundTag data = NbtIo.readCompressed(new FileInputStream(new File(saveLocation, "linkedinventories.dat")));
+                fromTag(data);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    /*
+        public void save(File saveLocation) {
+            try {
+                CompoundTag data = new CompoundTag();
+                data = toTag(data);
+                NbtIo.writeCompressed(data, new FileOutputStream(new File(saveLocation, "linkedinventories.dat")));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    */
     public void fromTag(CompoundTag tag) {
-        inventories.clear();
-        CompoundTag invs = tag.getCompound("invs");
-        for (String key : invs.getKeys()) {
-            inventories.put(key, fromList(invs.getCompound(key)));
-        }
+        globalInventories.fromTag(tag);
+        personalInventories.clear();
+        CompoundTag personalInvs = tag.getCompound("personalInvs");
+        personalInvs.getKeys().forEach(uuid -> {
+            InventoryStorage personalInv = new InventoryStorage(uuid);
+            personalInv.fromTag(personalInvs.getCompound(uuid));
+            personalInventories.put(UUID.fromString(uuid), personalInv);
+        });
+        migrated = tag.getBoolean("migrated");
+        String savedVersion = tag.getString("saveVersion");
+        if (!savedVersion.equals(saveVersion)) System.out.println("LinkedStorage savefile outdated");
     }
 
-    @Override
     public CompoundTag toTag(CompoundTag tag) {
-        CompoundTag invs = new CompoundTag();
-        for (String key : inventories.keySet()) {
-            if (!inventories.get(key).isInvEmpty())
-                invs.put(key, Inventories.toTag(new CompoundTag(), toList(inventories.get(key))));
-        }
-        tag.put("invs", invs);
+        globalInventories.toTag(tag);
+        CompoundTag personalInvs = new CompoundTag();
+        personalInventories.values().forEach(inventoryStorage -> personalInvs.put(inventoryStorage.name, inventoryStorage.toTag(new CompoundTag())));
+        tag.put("personalInvs", personalInvs);
+        tag.putBoolean("migrated", migrated);
+        tag.putString("saveVersion", saveVersion);
         return tag;
     }
 
-    private DefaultedList<ItemStack> toList(Inventory inv) {
-        DefaultedList<ItemStack> stacks = DefaultedList.ofSize(inv.getInvSize(), ItemStack.EMPTY);
-        for (int i = 0; i < inv.getInvSize(); i++)
-            stacks.set(i, inv.getInvStack(i));
-        return stacks;
+    public LinkedInventory getInv(DyeChannel dyeChannel) {
+        if (dyeChannel instanceof PlayerDyeChannel)
+            return getPersonalInv((PlayerDyeChannel) dyeChannel);
+        return globalInventories.getInv(dyeChannel);
     }
 
-    private LinkedInventory fromList(CompoundTag tag) {
-        LinkedInventory inventory = new LinkedInventory();
-        DefaultedList<ItemStack> stacks = DefaultedList.ofSize(inventory.getInvSize(), ItemStack.EMPTY);
-        Inventories.fromTag(tag, stacks);
-        for (int i = 0; i < stacks.size(); i++)
-            inventory.setInvStack(i, stacks.get(i));
-        return inventory;
+    public LinkedInventory getPersonalInv(PlayerDyeChannel dyeChannel) {
+        if (!personalInventories.containsKey(dyeChannel.playerID))
+            personalInventories.put(dyeChannel.playerID, new InventoryStorage(dyeChannel.playerID.toString()));
+        return personalInventories.get(dyeChannel.playerID).getInv(dyeChannel);
+    }
+
+    @Override
+    public boolean isDirty() {
+        return true;
     }
 }

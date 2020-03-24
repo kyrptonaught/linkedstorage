@@ -48,7 +48,7 @@ public class StorageItem extends Item {
         ItemStack stack = playerEntity.getStackInHand(hand);
         if (!world.isClient) {
             DyeChannel channel = LinkedInventoryHelper.getItemChannel(stack);
-            ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), playerEntity, (buf) -> buf.writeByteArray(channel.dyeChannel));
+            ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), playerEntity, channel::toBuf);
         }
         return new TypedActionResult<>(ActionResult.SUCCESS, stack);
     }

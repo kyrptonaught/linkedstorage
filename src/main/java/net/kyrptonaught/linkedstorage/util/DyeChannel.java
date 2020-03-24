@@ -2,9 +2,13 @@ package net.kyrptonaught.linkedstorage.util;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.PacketByteBuf;
+
+import java.util.UUID;
 
 public class DyeChannel {
     public byte[] dyeChannel;
+    protected int type = 0;
 
     public DyeChannel(byte[] dyeChannel) {
         this.dyeChannel = dyeChannel;
@@ -30,17 +34,35 @@ public class DyeChannel {
         return new DyeChannel(new byte[]{(byte) DyeColor.WHITE.getId(), (byte) DyeColor.WHITE.getId(), (byte) DyeColor.WHITE.getId()});
     }
 
-    public void toTag(CompoundTag tag) {
+    public PlayerDyeChannel toPlayerDyeChannel(UUID playerid) {
+        return new PlayerDyeChannel(playerid, dyeChannel);
+    }
+
+    public void toBuf(PacketByteBuf buffer) {
+        buffer.writeCompoundTag(toTag(new CompoundTag()));
+    }
+
+    public static DyeChannel fromBuf(PacketByteBuf buffer) {
+        return fromTag(buffer.readCompoundTag());
+    }
+
+    public CompoundTag toTag(CompoundTag tag) {
+        tag.putInt("type", type);
         tag.putByteArray("dyechannel", dyeChannel);
+        return tag;
     }
 
     public static DyeChannel fromTag(CompoundTag tag) {
+        DyeChannel dyeChannel = defaultChannel();
         if (tag.contains("dyechannel", 11)) {
             int[] oldChannel = tag.getIntArray("dyechannel");
-            return new DyeChannel(new byte[]{(byte) oldChannel[0], (byte) oldChannel[1], (byte) oldChannel[2]});
+            dyeChannel = new DyeChannel(new byte[]{(byte) oldChannel[0], (byte) oldChannel[1], (byte) oldChannel[2]});
         }
         if (tag.contains("dyechannel", 7))
-            return new DyeChannel(tag.getByteArray("dyechannel"));
-        return defaultChannel();
+            dyeChannel = new DyeChannel(tag.getByteArray("dyechannel"));
+        int type = tag.getInt("type");
+        if (type == 1)
+            return dyeChannel.toPlayerDyeChannel(tag.getUuid("playerid"));
+        return dyeChannel;
     }
 }

@@ -9,7 +9,7 @@ import net.kyrptonaught.linkedstorage.util.LinkedInventoryHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeItem;
-import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
+import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
