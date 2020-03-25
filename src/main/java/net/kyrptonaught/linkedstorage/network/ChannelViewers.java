@@ -5,13 +5,12 @@ import net.kyrptonaught.linkedstorage.inventory.LinkedContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ChannelViewers {
-    private static final ConcurrentHashMap<String, HashSet<UUID>> viewers = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Set<UUID>> viewers = new ConcurrentHashMap<>();
 
     public static Boolean getViewersFor(String channel) {
         if (!viewers.containsKey(channel)) return false;
@@ -19,7 +18,7 @@ public class ChannelViewers {
     }
 
     static void addViewerFor(String channel, UUID uuid) {
-        if (!viewers.containsKey(channel)) viewers.put(channel, new HashSet<>());
+        if (!viewers.containsKey(channel)) viewers.put(channel, ConcurrentHashMap.newKeySet());
         viewers.get(channel).add(uuid);
     }
 
@@ -30,7 +29,7 @@ public class ChannelViewers {
     }
 
     static void removeViewerFor(String channel, UUID player) {
-        viewers.getOrDefault(channel, new HashSet<>()).remove(player);
+        viewers.getOrDefault(channel, ConcurrentHashMap.newKeySet()).remove(player);
     }
 
     private static void removeViewerForServer(String channel, UUID player, MinecraftServer server) {
