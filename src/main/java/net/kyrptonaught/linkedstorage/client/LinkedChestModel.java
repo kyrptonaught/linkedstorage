@@ -12,7 +12,7 @@ import net.minecraft.client.util.math.MatrixStack;
 public class LinkedChestModel extends Model {
     private final ModelPart lid;
     protected ModelPart base;
-    private final ModelPart latch;
+    public final ModelPart latch;
     public ModelPart button1, button2, button3;
 
     public LinkedChestModel() {
@@ -55,6 +55,5 @@ public class LinkedChestModel extends Model {
     public void render(MatrixStack stack, VertexConsumer consumer, int i, int j, float r, float g, float b, float f) {
         base.render(stack, consumer, i, j);
         lid.render(stack, consumer, i, j);
-        latch.render(stack, consumer, i, j);
     }
 }

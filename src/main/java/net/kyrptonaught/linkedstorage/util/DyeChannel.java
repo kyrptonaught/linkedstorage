@@ -35,7 +35,7 @@ public class DyeChannel {
     }
 
     public PlayerDyeChannel toPlayerDyeChannel(UUID playerid) {
-        return new PlayerDyeChannel(playerid, dyeChannel);
+        return new PlayerDyeChannel(playerid, dyeChannel.clone());
     }
 
     public void toBuf(PacketByteBuf buffer) {

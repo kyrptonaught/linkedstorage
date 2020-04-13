@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.kyrptonaught.linkedstorage.LinkedStorageModClient;
 import net.kyrptonaught.linkedstorage.block.StorageBlock;
 import net.kyrptonaught.linkedstorage.block.StorageBlockEntity;
+import net.kyrptonaught.linkedstorage.util.PlayerDyeChannel;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.TexturedRenderLayers;
@@ -23,6 +24,7 @@ import net.minecraft.world.World;
 @Environment(EnvType.CLIENT)
 public class StorageBlockRenderer extends BlockEntityRenderer<StorageBlockEntity> {
     private static final Identifier WOOL_TEXTURE = new Identifier("textures/block/white_wool.png");
+    private static final Identifier DIAMOND_TEXTURE = new Identifier("textures/block/diamond_block.png");
 
     public StorageBlockRenderer(BlockEntityRenderDispatcher dispatcher) {
         super(dispatcher);
@@ -58,6 +60,11 @@ public class StorageBlockRenderer extends BlockEntityRenderer<StorageBlockEntity
             model.button1.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(WOOL_TEXTURE)), light, overlay, color1[0], color1[1], color1[2], 1);
             model.button2.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(WOOL_TEXTURE)), light, overlay, color2[0], color2[1], color2[2], 1);
             model.button3.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(WOOL_TEXTURE)), light, overlay, color3[0], color3[1], color3[2], 1);
+
+            if (blockEntity.getChannel() instanceof PlayerDyeChannel)
+                model.latch.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(DIAMOND_TEXTURE)), light, overlay, 1, 1, 1, 1);
+            else
+                model.latch.render(matrices, vertexConsumer, light, overlay);
             matrices.pop();
         }
     }

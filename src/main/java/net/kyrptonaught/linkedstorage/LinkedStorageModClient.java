@@ -12,7 +12,9 @@ import net.kyrptonaught.linkedstorage.client.StorageBlockRenderer;
 import net.kyrptonaught.linkedstorage.network.UpdateViewerList;
 import net.kyrptonaught.linkedstorage.register.ModBlocks;
 import net.kyrptonaught.linkedstorage.register.ModItems;
+import net.kyrptonaught.linkedstorage.util.DyeChannel;
 import net.kyrptonaught.linkedstorage.util.LinkedInventoryHelper;
+import net.kyrptonaught.linkedstorage.util.PlayerDyeChannel;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.container.GenericContainer;
@@ -31,10 +33,14 @@ public class LinkedStorageModClient implements ClientModInitializer {
                 new GenericContainerScreen(GenericContainer.createGeneric9x3(syncId, player.inventory), player.inventory, new TranslatableText("container.linkedstorage")));
 
         ColorProviderRegistryImpl.ITEM.register((stack, layer) -> {
-            if (layer == 0)
-                return DyeColor.WHITE.getMaterialColor().color;
-            byte[] colors = LinkedInventoryHelper.getItemChannel(stack).dyeChannel;
-            return DyeColor.byId(colors[layer - 1]).getMaterialColor().color;
+            DyeChannel dyeChannel = LinkedInventoryHelper.getItemChannel(stack);
+            if (layer > 0 && layer < 4) {
+                byte[] colors = dyeChannel.dyeChannel;
+                return DyeColor.byId(colors[layer - 1]).getMaterialColor().color;
+            }
+            if (layer == 4 && dyeChannel instanceof PlayerDyeChannel)
+                return DyeColor.LIGHT_BLUE.getMaterialColor().color;
+            return DyeColor.WHITE.getMaterialColor().color;
         }, ModItems.storageItem, ModBlocks.storageBlock);
 
         ClientSpriteRegistryCallback.event(TexturedRenderLayers.CHEST_ATLAS_TEXTURE).register((atlasTexture, registry) -> registry.register(TEXTURE));

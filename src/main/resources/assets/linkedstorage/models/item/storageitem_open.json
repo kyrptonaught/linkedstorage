@@ -4,6 +4,7 @@
     "layer0": "linkedstorage:item/portablestorage_open",
     "layer1": "linkedstorage:item/portablestorage_b1_open",
     "layer2": "linkedstorage:item/portablestorage_b2_open",
-    "layer3": "linkedstorage:item/portablestorage_b3_open"
+    "layer3": "linkedstorage:item/portablestorage_b3_open",
+    "layer4": "linkedstorage:item/portablestorage_latch_open"
   }
 }

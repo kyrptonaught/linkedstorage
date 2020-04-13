@@ -7,6 +7,7 @@ import net.kyrptonaught.linkedstorage.network.OpenStoragePacket;
 import net.kyrptonaught.linkedstorage.network.SetDyePacket;
 import net.kyrptonaught.linkedstorage.util.DyeChannel;
 import net.kyrptonaught.linkedstorage.util.LinkedInventoryHelper;
+import net.kyrptonaught.linkedstorage.util.PlayerDyeChannel;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -52,6 +53,7 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
         return button.getBoundingBox().expand(.001).offset(pos.getX(), pos.getY(), pos.getZ()).contains(hit);
     }
 
+    @Environment(EnvType.CLIENT)
     private boolean checkButons(BlockState state, BlockPos pos, BlockHitResult hit) {
         VoxelShape[] buttons = BUTTONS;
         if (state.get(FACING).equals(Direction.EAST) || state.get(FACING).equals(Direction.WEST))
@@ -72,10 +74,19 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack stack = player.getMainHandStack();
-        if (!world.isClient) {
-            if (player.isSneaking())
-                LinkedInventoryHelper.setBlockChannel(LinkedInventoryHelper.getBlockChannel(world, pos).toPlayerDyeChannel(player.getUuid()), world, pos);
+        DyeChannel channel = LinkedInventoryHelper.getBlockChannel(world, pos);
+        if (stack.getItem().equals(Items.DIAMOND)) {
+            if (channel instanceof PlayerDyeChannel) {
+                channel = new DyeChannel(channel.dyeChannel.clone());
+                LinkedInventoryHelper.setBlockChannel(channel, world, pos);
+                if (!player.isCreative()) stack.increment(1);
+            } else {
+                LinkedInventoryHelper.setBlockChannel(channel.toPlayerDyeChannel(player.getUuid()), world, pos);
+                if (!player.isCreative()) stack.decrement(1);
+            }
+            return ActionResult.SUCCESS;
         }
+
         if (world.isClient)
             if (stack.getItem() instanceof DyeItem) {
                 if (!checkButons(state, pos, hit))

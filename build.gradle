@@ -14,14 +14,7 @@ minecraft {
 }
 repositories {
 		maven { url 'https://jitpack.io' }
-	maven {
-		name = "NerdHubMC"
-		url = "https://maven.abusedmaster.xyz"
-	}
-	maven {
-        name = "BuildCraft"
-        url = "https://mod-buildcraft.com/maven"
-    }
+	maven {url 'https://dl.bintray.com/kyrptonaught/kyrptconfig'}
 }
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -31,8 +24,8 @@ dependencies {
 
 	modImplementation "me.shedaniel:RoughlyEnoughItems:3.6.4"
 
-	//modCompile "alexiil.mc.lib:libblockattributes-fluids:+"
-	//include "alexiil.mc.lib:libblockattributes-fluids:+"
+	modImplementation 'net.kyrptonaught:kyrptconfig:1.0.0'
+	include 'net.kyrptonaught:kyrptconfig:1.0.0'
 }
 
 processResources {

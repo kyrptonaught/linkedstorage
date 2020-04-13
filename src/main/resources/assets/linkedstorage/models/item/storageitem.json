@@ -4,7 +4,8 @@
     "layer0": "linkedstorage:item/portablestorage",
     "layer1": "linkedstorage:item/portablestorage_b1",
     "layer2": "linkedstorage:item/portablestorage_b2",
-    "layer3": "linkedstorage:item/portablestorage_b3"
+    "layer3": "linkedstorage:item/portablestorage_b3",
+    "layer4": "linkedstorage:item/portablestorage_latch"
   },
   "overrides": [
     {
