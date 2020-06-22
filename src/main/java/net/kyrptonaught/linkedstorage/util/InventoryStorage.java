@@ -5,7 +5,7 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.DefaultedList;
+import net.minecraft.util.collection.DefaultedList;
 
 import java.util.HashMap;
 
@@ -28,7 +28,7 @@ public class InventoryStorage {
     public CompoundTag toTag(CompoundTag tag) {
         CompoundTag invs = new CompoundTag();
         for (String key : inventories.keySet()) {
-            if (!inventories.get(key).isInvEmpty())
+            if (!inventories.get(key).isEmpty())
                 invs.put(key, Inventories.toTag(new CompoundTag(), toList(inventories.get(key))));
         }
         tag.put("invs", invs);
@@ -43,18 +43,18 @@ public class InventoryStorage {
     }
 
     private DefaultedList<ItemStack> toList(Inventory inv) {
-        DefaultedList<ItemStack> stacks = DefaultedList.ofSize(inv.getInvSize(), ItemStack.EMPTY);
-        for (int i = 0; i < inv.getInvSize(); i++)
-            stacks.set(i, inv.getInvStack(i));
+        DefaultedList<ItemStack> stacks = DefaultedList.ofSize(inv.size(), ItemStack.EMPTY);
+        for (int i = 0; i < inv.size(); i++)
+            stacks.set(i, inv.getStack(i));
         return stacks;
     }
 
     private LinkedInventory fromList(CompoundTag tag) {
         LinkedInventory inventory = new LinkedInventory();
-        DefaultedList<ItemStack> stacks = DefaultedList.ofSize(inventory.getInvSize(), ItemStack.EMPTY);
+        DefaultedList<ItemStack> stacks = DefaultedList.ofSize(inventory.size(), ItemStack.EMPTY);
         Inventories.fromTag(tag, stacks);
         for (int i = 0; i < stacks.size(); i++)
-            inventory.setInvStack(i, stacks.get(i));
+            inventory.setStack(i, stacks.get(i));
         return inventory;
     }
 }

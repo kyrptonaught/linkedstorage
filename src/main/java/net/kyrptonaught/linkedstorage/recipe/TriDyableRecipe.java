@@ -22,20 +22,20 @@ public class TriDyableRecipe extends SpecialCraftingRecipe {
 
     @Override
     public boolean matches(CraftingInventory inv, World world) {
-        Item center = inv.getInvStack(4).getItem();
-        return (inv.getInvStack(0).getItem() instanceof DyeItem ||
-                inv.getInvStack(1).getItem() instanceof DyeItem ||
-                inv.getInvStack(2).getItem() instanceof DyeItem) &&
+        Item center = inv.getStack(4).getItem();
+        return (inv.getStack(0).getItem() instanceof DyeItem ||
+                inv.getStack(1).getItem() instanceof DyeItem ||
+                inv.getStack(2).getItem() instanceof DyeItem) &&
                 (center instanceof StorageItem || (center instanceof BlockItem && ((BlockItem) center).getBlock() instanceof StorageBlock));
     }
 
     @Override
     public ItemStack craft(CraftingInventory inv) {
-        ItemStack newStack = inv.getInvStack(4).copy();
+        ItemStack newStack = inv.getStack(4).copy();
         DyeChannel dyeChannel = LinkedInventoryHelper.getItemChannel(newStack).clone();
         for (int i = 0; i < 3; i++)
-            if (inv.getInvStack(i).getItem() instanceof DyeItem)
-                dyeChannel.setSlot(i, (byte) ((DyeItem) inv.getInvStack(i).getItem()).getColor().getId());
+            if (inv.getStack(i).getItem() instanceof DyeItem)
+                dyeChannel.setSlot(i, (byte) ((DyeItem) inv.getStack(i).getItem()).getColor().getId());
         LinkedInventoryHelper.setItemChannel(dyeChannel, newStack);
         return newStack;
     }

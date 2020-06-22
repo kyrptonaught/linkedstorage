@@ -22,8 +22,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialRecipeSerializer;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.World;
 
 public class LinkedStorageMod implements ModInitializer {
     public static final String MOD_ID = "linkedstorage";
@@ -44,8 +45,8 @@ public class LinkedStorageMod implements ModInitializer {
         copyDyeRecipe = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "copy_dye_recipe"), new CopyDyeRecipe.Serializer());
 
         ServerStartCallback.EVENT.register(server -> {
-            CMAN = server.getWorld(DimensionType.OVERWORLD).getPersistentStateManager().getOrCreate(() -> new ChannelManager(MOD_ID), MOD_ID);
-            Migrator.Migrate(server.getWorld(DimensionType.OVERWORLD).getSaveHandler().getWorldDir(), CMAN);
+            CMAN = server.getWorld(World.OVERWORLD).getPersistentStateManager().getOrCreate(() -> new ChannelManager(MOD_ID), MOD_ID);
+            Migrator.Migrate(server.getSavePath(WorldSavePath.ROOT).toFile(), CMAN);//this took forever to figure out
         });
     }
 

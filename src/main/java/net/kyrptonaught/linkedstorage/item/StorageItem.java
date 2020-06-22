@@ -5,7 +5,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.block.StorageBlock;
-import net.kyrptonaught.linkedstorage.network.ChannelViewers;
 import net.kyrptonaught.linkedstorage.util.DyeChannel;
 import net.kyrptonaught.linkedstorage.util.LinkedInventoryHelper;
 import net.minecraft.client.item.TooltipContext;
@@ -25,10 +24,7 @@ public class StorageItem extends Item {
     public StorageItem(Settings item$Settings_1) {
         super(item$Settings_1);
         Registry.register(Registry.ITEM, new Identifier(LinkedStorageMod.MOD_ID, "storageitem"), this);
-        this.addPropertyGetter(new Identifier("open"), (stack, world, entity) -> {
-            String channel = LinkedInventoryHelper.getItemChannel(stack).getChannelName();
-            return ChannelViewers.getViewersFor(channel) ? 1 : 0;
-        });
+
     }
 
     @Override

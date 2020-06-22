@@ -11,13 +11,13 @@ import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.util.LinkedInventoryHelper;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.ShapedRecipe;
-import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
-import net.minecraft.util.PacketByteBuf;
+import net.minecraft.util.collection.DefaultedList;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -33,7 +33,7 @@ public class CopyDyeRecipe extends ShapedRecipe {
 
     public ItemStack craft(CraftingInventory craftingInventory) {
         ItemStack output = this.getOutput().copy();
-        LinkedInventoryHelper.setItemChannel(LinkedInventoryHelper.getItemChannel(craftingInventory.getInvStack(4)), output);
+        LinkedInventoryHelper.setItemChannel(LinkedInventoryHelper.getItemChannel(craftingInventory.getStack(4)), output);
         return output;
     }
 

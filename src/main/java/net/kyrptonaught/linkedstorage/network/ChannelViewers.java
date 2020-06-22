@@ -42,7 +42,7 @@ public class ChannelViewers {
             for (String channel : ChannelViewers.viewers.keySet())
                 for (UUID uuid : ChannelViewers.viewers.get(channel)) {
                     PlayerEntity player = server.getPlayerManager().getPlayer(uuid);
-                    if (player == null || !(player.container instanceof LinkedContainer)) {
+                    if (player == null || !(player.currentScreenHandler instanceof LinkedContainer)) {
                         removeViewerForServer(channel, uuid, server);
                     }
                 }

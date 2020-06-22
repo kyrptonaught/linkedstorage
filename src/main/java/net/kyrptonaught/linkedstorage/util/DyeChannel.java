@@ -1,8 +1,8 @@
 package net.kyrptonaught.linkedstorage.util;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.DyeColor;
-import net.minecraft.util.PacketByteBuf;
 
 import java.util.UUID;
 

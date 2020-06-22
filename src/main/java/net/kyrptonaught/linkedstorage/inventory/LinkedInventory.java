@@ -1,19 +1,19 @@
 package net.kyrptonaught.linkedstorage.inventory;
 
-import net.minecraft.inventory.BasicInventory;
 import net.minecraft.inventory.SidedInventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 
-public class LinkedInventory extends BasicInventory implements SidedInventory {
+public class LinkedInventory extends SimpleInventory implements SidedInventory {
 
     public LinkedInventory() {
         super(27);
     }
 
     @Override
-    public int[] getInvAvailableSlots(Direction var1) {
-        int[] result = new int[getInvSize()];
+    public int[] getAvailableSlots(Direction var1) {
+        int[] result = new int[size()];
         for (int i = 0; i < result.length; i++) {
             result[i] = i;
         }
@@ -22,12 +22,12 @@ public class LinkedInventory extends BasicInventory implements SidedInventory {
     }
 
     @Override
-    public boolean canInsertInvStack(int var1, ItemStack var2, Direction var3) {
+    public boolean canInsert(int var1, ItemStack var2, Direction var3) {
         return true;
     }
 
     @Override
-    public boolean canExtractInvStack(int var1, ItemStack var2, Direction var3) {
+    public boolean canExtract(int var1, ItemStack var2, Direction var3) {
         return true;
     }
 }

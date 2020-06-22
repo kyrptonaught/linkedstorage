@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.2.7-SNAPSHOT'
+	id 'fabric-loom' version '0.4-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -22,10 +22,6 @@ dependencies {
 	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
 	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation "me.shedaniel:RoughlyEnoughItems:3.6.4"
-
-	modImplementation 'net.kyrptonaught:kyrptconfig:1.0.0'
-	include 'net.kyrptonaught:kyrptconfig:1.0.0'
 }
 
 processResources {

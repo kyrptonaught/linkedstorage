@@ -6,7 +6,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.LinkedStorageModClient;
-import net.minecraft.resource.DirectoryResourcePack;
 import net.minecraft.resource.ResourceNotFoundException;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.resource.ZipResourcePack;
@@ -24,8 +23,9 @@ import java.util.zip.ZipInputStream;
 public class InputStreamResourcePack extends ZipResourcePack {
 
     List<String> files = new ArrayList<>();
-private String url;
-    public InputStreamResourcePack( String url) {
+    private String url;
+
+    public InputStreamResourcePack(String url) {
         super(new File(url));
         this.url = url;
         InputStream stream = LinkedStorageModClient.class.getResourceAsStream(url);
@@ -38,6 +38,7 @@ private String url;
             e.printStackTrace();
         }
     }
+
     @Override
     protected InputStream openFile(String name) throws IOException {
         InputStream stream = LinkedStorageModClient.class.getResourceAsStream(url);
