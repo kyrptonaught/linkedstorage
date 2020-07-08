@@ -5,6 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
+import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.fabricmc.fabric.impl.client.rendering.ColorProviderRegistryImpl;
@@ -17,6 +18,7 @@ import net.kyrptonaught.linkedstorage.register.ModItems;
 import net.kyrptonaught.linkedstorage.util.DyeChannel;
 import net.kyrptonaught.linkedstorage.util.LinkedInventoryHelper;
 import net.kyrptonaught.linkedstorage.util.PlayerDyeChannel;
+import net.minecraft.client.gui.screen.ingame.Generic3x3ContainerScreen;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.screen.GenericContainerScreenHandler;
@@ -35,9 +37,7 @@ public class LinkedStorageModClient implements ClientModInitializer {
             String channel = LinkedInventoryHelper.getItemChannel(stack).getChannelName();
             return ChannelViewers.getViewersFor(channel) ? 1 : 0;
         });
-        ScreenProviderRegistry.INSTANCE.registerFactory(new Identifier(LinkedStorageMod.MOD_ID, "linkedstorage"), (syncId, identifier, player, buf) ->
-                new GenericContainerScreen(GenericContainerScreenHandler.createGeneric9x3(syncId, player.inventory), player.inventory, new TranslatableText("container.linkedstorage")));
-
+        ScreenRegistry.register(LinkedStorageMod.LINKED_SCREEN_HANDLER_TYPE,  GenericContainerScreen::new);
         ColorProviderRegistryImpl.ITEM.register((stack, layer) -> {
             DyeChannel dyeChannel = LinkedInventoryHelper.getItemChannel(stack);
             if (layer > 0 && layer < 4) {

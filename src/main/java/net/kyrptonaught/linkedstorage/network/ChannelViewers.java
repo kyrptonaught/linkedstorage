@@ -1,6 +1,9 @@
 package net.kyrptonaught.linkedstorage.network;
 
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.server.ServerTickCallback;
+import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.inventory.LinkedContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -38,7 +41,7 @@ public class ChannelViewers {
     }
 
     public static void registerChannelWatcher() {
-        ServerTickCallback.EVENT.register(server -> {
+        ServerTickEvents.START_SERVER_TICK.register(server -> {
             for (String channel : ChannelViewers.viewers.keySet())
                 for (UUID uuid : ChannelViewers.viewers.get(channel)) {
                     PlayerEntity player = server.getPlayerManager().getPlayer(uuid);

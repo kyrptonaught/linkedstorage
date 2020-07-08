@@ -5,6 +5,8 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.server.ServerStartCallback;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.kyrptonaught.linkedstorage.inventory.LinkedContainer;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventory;
 import net.kyrptonaught.linkedstorage.network.ChannelViewers;
@@ -18,10 +20,17 @@ import net.kyrptonaught.linkedstorage.util.ChannelManager;
 import net.kyrptonaught.linkedstorage.util.DyeChannel;
 import net.kyrptonaught.linkedstorage.util.Migrator;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialRecipeSerializer;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.registry.Registry;
@@ -34,11 +43,11 @@ public class LinkedStorageMod implements ModInitializer {
     public static RecipeSerializer<CopyDyeRecipe> copyDyeRecipe;
     private static ChannelManager CMAN; //lol
 
+    public static final ScreenHandlerType<LinkedContainer> LINKED_SCREEN_HANDLER_TYPE = ScreenHandlerRegistry.registerExtended(new Identifier(MOD_ID, "linkedstorage"), LinkedContainer::new);
     @Override
     public void onInitialize() {
         ModBlocks.register();
         ModItems.register();
-        ContainerProviderRegistry.INSTANCE.registerFactory(new Identifier(MOD_ID, "linkedstorage"), (syncId, id, player, buf) -> getContainer(syncId, player, DyeChannel.fromBuf(buf)));
         SetDyePacket.registerReceivePacket();
         OpenStoragePacket.registerReceivePacket();
         ChannelViewers.registerChannelWatcher();
@@ -48,11 +57,6 @@ public class LinkedStorageMod implements ModInitializer {
             CMAN = server.getWorld(World.OVERWORLD).getPersistentStateManager().getOrCreate(() -> new ChannelManager(MOD_ID), MOD_ID);
             Migrator.Migrate(server.getSavePath(WorldSavePath.ROOT).toFile(), CMAN);//this took forever to figure out
         });
-    }
-
-    static LinkedContainer getContainer(int id, PlayerEntity player, DyeChannel channel) {
-        ChannelViewers.addViewerFor(channel.getChannelName(), player);
-        return new LinkedContainer(id, player.inventory, getInventory(channel));
     }
 
     public static LinkedInventory getInventory(DyeChannel dyeChannel) {
