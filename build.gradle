@@ -13,8 +13,6 @@ group = project.maven_group
 minecraft {
 }
 repositories {
-		maven { url 'https://jitpack.io' }
-	maven {url 'https://dl.bintray.com/kyrptonaught/kyrptconfig'}
 }
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"

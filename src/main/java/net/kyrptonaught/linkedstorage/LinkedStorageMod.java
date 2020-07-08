@@ -3,6 +3,7 @@ package net.kyrptonaught.linkedstorage;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.server.ServerStartCallback;
 import net.kyrptonaught.linkedstorage.inventory.LinkedContainer;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventory;
@@ -43,8 +44,7 @@ public class LinkedStorageMod implements ModInitializer {
         ChannelViewers.registerChannelWatcher();
         triDyeRecipe = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "tri_dyable_recipe"), new SpecialRecipeSerializer<>(TriDyableRecipe::new));
         copyDyeRecipe = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "copy_dye_recipe"), new CopyDyeRecipe.Serializer());
-
-        ServerStartCallback.EVENT.register(server -> {
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             CMAN = server.getWorld(World.OVERWORLD).getPersistentStateManager().getOrCreate(() -> new ChannelManager(MOD_ID), MOD_ID);
             Migrator.Migrate(server.getSavePath(WorldSavePath.ROOT).toFile(), CMAN);//this took forever to figure out
         });
