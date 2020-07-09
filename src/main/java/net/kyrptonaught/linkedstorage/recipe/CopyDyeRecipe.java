@@ -9,7 +9,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
 
 public class CopyDyeRecipe extends ShapedRecipe {
 
@@ -41,7 +40,7 @@ public class CopyDyeRecipe extends ShapedRecipe {
 
         @Override
         public void write(PacketByteBuf buf, CopyDyeRecipe recipe) {
-          ShapedRecipe.Serializer.SHAPED.write(buf, recipe);
+            ShapedRecipe.Serializer.SHAPED.write(buf, recipe);
         }
     }
 }

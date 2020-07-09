@@ -3,7 +3,6 @@ package net.kyrptonaught.linkedstorage.network;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.inventory.LinkedContainer;
@@ -26,7 +25,7 @@ public class OpenStoragePacket {
                 PlayerEntity player = packetContext.getPlayer();
                 World world = player.getEntityWorld();
                 player.openHandledScreen(LinkedContainer.createScreenHandlerFactory(LinkedInventoryHelper.getBlockChannel(world, pos)));
-             });
+            });
         });
     }
 

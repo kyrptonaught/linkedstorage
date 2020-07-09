@@ -1,9 +1,6 @@
 package net.kyrptonaught.linkedstorage.network;
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.server.ServerTickCallback;
-import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.inventory.LinkedContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
