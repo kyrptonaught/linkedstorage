@@ -46,7 +46,7 @@ public class LinkedStorageMod implements ModInitializer {
         copyDyeRecipe = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "copy_dye_recipe"), new CopyDyeRecipe.Serializer());
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             CMAN = server.getWorld(World.OVERWORLD).getPersistentStateManager().getOrCreate(() -> new ChannelManager(MOD_ID), MOD_ID);
-            Migrator.Migrate(server.getSavePath(WorldSavePath.ROOT).toFile(), CMAN);//this took forever to figure out
+            Migrator.Migrate(server.getSavePath(WorldSavePath.ROOT).toFile(), CMAN);
         });
     }
 

@@ -8,6 +8,7 @@ import net.kyrptonaught.linkedstorage.util.DyeChannel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.GenericContainerScreenHandler;
@@ -24,13 +25,15 @@ public class LinkedContainer extends GenericContainerScreenHandler {
     }
 
     public LinkedContainer(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
-        this(syncId, playerInventory, LinkedStorageMod.getInventory(DyeChannel.fromBuf(buf)));
+        this(syncId, playerInventory, new LinkedInventory());
+
     }
 
     @Override
     public ItemStack onSlotClick(int slotId, int clickData, SlotActionType actionType, PlayerEntity player) {
         if (slotId != -999 && player.inventory.getMainHandStack().getItem() instanceof StorageItem && this.getSlot(slotId).getStack().getItem() instanceof StorageItem)
             return ItemStack.EMPTY;
+
         return super.onSlotClick(slotId, clickData, actionType, player);
     }
 
@@ -48,9 +51,7 @@ public class LinkedContainer extends GenericContainerScreenHandler {
             }
 
             @Override
-            public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-                channel.toBuf(buf);
-            }
+            public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) { channel.toBuf(buf); }
         };
     }
 
