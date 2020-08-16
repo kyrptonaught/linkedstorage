@@ -19,7 +19,7 @@ public class ResourcePackManagerMixin {
 
     @Shadow
     @Final
-    private ResourcePackProfile.Factory<ResourcePackProfile> profileFactory;
+    private ResourcePackProfile.Factory profileFactory;
 
     @Inject(method = "providePackProfiles", at = @At(value = "RETURN"), cancellable = true)
     public void ResourcePackManager(CallbackInfoReturnable<Map<String, ResourcePackProfile>> cir) {

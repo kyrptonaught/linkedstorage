@@ -9,14 +9,14 @@ import java.util.function.Consumer;
 
 public class EnderStorageResourcePackProvider implements ResourcePackProvider {
     @Override
-    public <T extends ResourcePackProfile> void register(Consumer<T> consumer, ResourcePackProfile.Factory<T> factory) {
+    public void register(Consumer<ResourcePackProfile> consumer, ResourcePackProfile.Factory factory) {
         InputStreamResourcePack pack = new InputStreamResourcePack("/resourcepacks/enderstorage.zip") {
             public String getName() {
                 return "EnderStorage for LinkedStorage";
             }
         };
 
-        T resourcePackProfile2 = ResourcePackProfile.of(LinkedStorageMod.MOD_ID + ":enderstorage", false, () -> pack, factory, ResourcePackProfile.InsertionPosition.TOP, ResourcePackSource.PACK_SOURCE_BUILTIN);
+        ResourcePackProfile resourcePackProfile2 = ResourcePackProfile.of(LinkedStorageMod.MOD_ID + ":enderstorage", false, () -> pack, factory, ResourcePackProfile.InsertionPosition.TOP, ResourcePackSource.PACK_SOURCE_BUILTIN);
         if (resourcePackProfile2 != null) {
             consumer.accept(resourcePackProfile2);
         }
