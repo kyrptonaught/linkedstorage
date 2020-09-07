@@ -21,10 +21,8 @@ import java.util.zip.ZipInputStream;
 
 @Environment(EnvType.CLIENT)
 public class InputStreamResourcePack extends ZipResourcePack {
-
     List<String> files = new ArrayList<>();
     private String url;
-
     public InputStreamResourcePack(String url) {
         super(new File(url));
         this.url = url;
