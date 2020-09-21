@@ -34,6 +34,19 @@ public class DyeChannel {
         return new DyeChannel(new byte[]{(byte) DyeColor.WHITE.getId(), (byte) DyeColor.WHITE.getId(), (byte) DyeColor.WHITE.getId()});
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof DyeChannel)) return false;
+        DyeChannel otherChannel = (DyeChannel) other;
+        if (type != otherChannel.type)
+            return false;
+        if (otherChannel instanceof PlayerDyeChannel)
+            if (!((PlayerDyeChannel) otherChannel).playerID.equals(((PlayerDyeChannel) this).playerID))
+                return false;
+
+        return getChannelName().equals(otherChannel.getChannelName());
+    }
+
     public PlayerDyeChannel toPlayerDyeChannel(UUID playerid) {
         return new PlayerDyeChannel(playerid, dyeChannel.clone());
     }
