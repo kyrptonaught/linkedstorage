@@ -31,7 +31,7 @@ public class LinkedContainer extends GenericContainerScreenHandler {
 
     @Override
     public ItemStack onSlotClick(int slotId, int clickData, SlotActionType actionType, PlayerEntity player) {
-        if (slotId != -999 && player.inventory.getMainHandStack().getItem() instanceof StorageItem && this.getSlot(slotId).getStack().getItem() instanceof StorageItem)
+        if (slotId != -999 && slotId > -1 && player.inventory.getMainHandStack().getItem() instanceof StorageItem && this.getSlot(slotId).getStack().getItem() instanceof StorageItem)
             return ItemStack.EMPTY;
 
         return super.onSlotClick(slotId, clickData, actionType, player);
