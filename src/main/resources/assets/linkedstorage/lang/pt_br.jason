@@ -1,0 +1,8 @@
+  
+{
+  "container.linkedstorage": "Armazenamento vinculado",
+  "itemGroup.linkedstorage.linkedstorage": "Armazenamento vinculado",
+  "item.linkedstorage.storageitem": "Armazenamento portátil",
+  "block.linkedstorage.storageblock": "Bloco de armazenamento",
+  "text.linkeditem.channel": "Definido como: %s"
+}
