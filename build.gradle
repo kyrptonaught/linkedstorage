@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.4-SNAPSHOT'
+	id 'fabric-loom' version '0.5-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -13,6 +13,7 @@ group = project.maven_group
 minecraft {
 }
 repositories {
+	maven {url 'https://dl.bintray.com/kyrptonaught/Birpi'}
 }
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -20,6 +21,8 @@ dependencies {
 	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
 	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
+	modImplementation 'net.kyrptonaught:birpi:0.0.1-1.16'
+	include 'net.kyrptonaught:birpi:0.0.1-1.16'
 }
 
 processResources {

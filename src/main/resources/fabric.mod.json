@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "linkedstorage",
-  "version": "1.3.9-1.16",
+  "version": "1.3.10-1.16",
   "name": "Linked Storage",
   "description": "Linkable storage's!",
   "authors": [
@@ -14,17 +14,14 @@
   "license": "MIT",
   "icon": "assets/linkedstorage/icon.png",
   "environment": "*",
-  "mixins": [
-    {
-      "config": "linkedstorage.mixins.json",
-      "environment": "client"
-    }
-  ],
   "entrypoints": {
     "main": [
       "net.kyrptonaught.linkedstorage.LinkedStorageMod"
     ],
     "client": [
+      "net.kyrptonaught.linkedstorage.LinkedStorageModClient"
+    ],
+    "registerbirpis": [
       "net.kyrptonaught.linkedstorage.LinkedStorageModClient"
     ]
   },
