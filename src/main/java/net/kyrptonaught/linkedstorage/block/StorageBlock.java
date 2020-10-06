@@ -12,12 +12,11 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.container.Container;
-import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.*;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -33,8 +32,8 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 
 import java.util.List;
 
@@ -110,8 +109,8 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
     }
 
     @Override
-    public SidedInventory getInventory(BlockState var1, IWorld var2, BlockPos var3) {
-        return ((StorageBlockEntity) var2.getBlockEntity(var3)).getLinkedInventory();
+    public SidedInventory getInventory(BlockState state, WorldAccess world, BlockPos pos) {
+        return ((StorageBlockEntity) world.getBlockEntity(pos)).getLinkedInventory();
     }
 
     @Environment(EnvType.CLIENT)
@@ -140,7 +139,7 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
             Block.createCuboidShape(6, 14, 10, 10, 15, 12)};
     private final VoxelShape SHAPEEW = VoxelShapes.union(Block.createCuboidShape(1, 0, 1, 15, 14, 15), BUTTONSEW);
 
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext ePos) {
+    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext ePos) {
         if (state.get(FACING).equals(Direction.EAST) || state.get(FACING).equals(Direction.WEST))
             return SHAPEEW;
         return SHAPE;
@@ -153,7 +152,7 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
 
     @Override
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-        return Container.calculateComparatorOutput(getInventory(state, world, pos));
+        return ScreenHandler.calculateComparatorOutput(getInventory(state, world, pos));
     }
 
     @Environment(EnvType.CLIENT)
@@ -166,4 +165,5 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
+
 }

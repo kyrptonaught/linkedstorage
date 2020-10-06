@@ -13,8 +13,8 @@ public class Migrator {
     public static void Migrate(File server, ChannelManager CMAN) {
         if (!CMAN.migrated) {
             try {
-             File levelDat = new File(server, "level.dat");
-             if(!levelDat.exists() || !levelDat.canRead()) return;
+                File levelDat = new File(server, "level.dat");
+                if (!levelDat.exists() || !levelDat.canRead()) return;
                 CompoundTag data = NbtIo.readCompressed(new FileInputStream(levelDat)).getCompound("Data");
                 if (data.contains("cardinal_components", NbtType.LIST)) {
                     ListTag componentList = data.getList("cardinal_components", NbtType.COMPOUND);

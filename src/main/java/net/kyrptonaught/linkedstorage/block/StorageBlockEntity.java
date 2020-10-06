@@ -7,6 +7,7 @@ import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventory;
 import net.kyrptonaught.linkedstorage.network.ChannelViewers;
 import net.kyrptonaught.linkedstorage.util.DyeChannel;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.CompoundTag;
 
@@ -22,8 +23,9 @@ public class StorageBlockEntity extends OpenableBlockEntity implements BlockEnti
         this(StorageBlock.blockEntity);
     }
 
-    public void fromTag(CompoundTag compoundTag_1) {
-        super.fromTag(compoundTag_1);
+    @Override
+    public void fromTag(BlockState state, CompoundTag compoundTag_1) {
+        super.fromTag(state, compoundTag_1);
         dyeChannel = DyeChannel.fromTag(compoundTag_1);
         this.markDirty();
     }
@@ -65,7 +67,8 @@ public class StorageBlockEntity extends OpenableBlockEntity implements BlockEnti
 
     @Override
     public void fromClientTag(CompoundTag tag) {
-        fromTag(tag);
+        dyeChannel = DyeChannel.fromTag(tag);
+        this.markDirty();
     }
 
     @Override
