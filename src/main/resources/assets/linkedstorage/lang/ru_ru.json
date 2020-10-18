@@ -1,0 +1,7 @@
+{
+  "container.linkedstorage": "Связанное хранилище",
+  "itemGroup.linkedstorage.linkedstorage": "Связанное хранилище",
+  "item.linkedstorage.storageitem": "Сумка Края",
+  "block.linkedstorage.storageblock": "Сундук Края",
+  "text.linkeditem.channel": "Значение: %s"
+}
