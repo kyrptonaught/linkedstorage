@@ -7,9 +7,9 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegi
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.impl.client.rendering.ColorProviderRegistryImpl;
-import net.kyrptonaught.birpi.BIRPIdata;
-import net.kyrptonaught.birpi.RegisterBIRPI;
+import net.fabricmc.loader.api.FabricLoader;
 import net.kyrptonaught.linkedstorage.block.StorageBlock;
 import net.kyrptonaught.linkedstorage.client.StorageBlockRenderer;
 import net.kyrptonaught.linkedstorage.network.ChannelViewers;
@@ -24,11 +24,9 @@ import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class LinkedStorageModClient implements ClientModInitializer, RegisterBIRPI {
+public class LinkedStorageModClient implements ClientModInitializer {
     public static final Identifier TEXTURE = new Identifier(LinkedStorageMod.MOD_ID, "block/linkedstorage");
 
     @Override
@@ -51,12 +49,9 @@ public class LinkedStorageModClient implements ClientModInitializer, RegisterBIR
         }, ModItems.storageItem, ModBlocks.storageBlock);
         ClientSpriteRegistryCallback.event(TexturedRenderLayers.CHEST_ATLAS_TEXTURE).register((atlasTexture, registry) -> registry.register(TEXTURE));
         UpdateViewerList.registerReceivePacket();
+        FabricLoader.getInstance().getModContainer(LinkedStorageMod.MOD_ID).ifPresent(modContainer -> {
+            ResourceManagerHelper.registerBuiltinResourcePack(new Identifier(LinkedStorageMod.MOD_ID, "enderstorage"), "resourcepacks/enderstorage", modContainer, false);
+        });
     }
 
-    @Override
-    public List<BIRPIdata> getBIRPIs() {
-        List<BIRPIdata> birpidata = new ArrayList<>();
-        birpidata.add(new BIRPIdata(LinkedStorageMod.MOD_ID, "enderstorage", "enderstorage.zip","EnderStorage for LinkedStorage",this.getClass()));
-        return birpidata;
-    }
 }
