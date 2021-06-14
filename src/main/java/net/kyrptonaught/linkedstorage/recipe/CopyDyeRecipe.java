@@ -13,7 +13,7 @@ import net.minecraft.util.Identifier;
 public class CopyDyeRecipe extends ShapedRecipe {
 
     public CopyDyeRecipe(ShapedRecipe shapedRecipe) {
-        super(shapedRecipe.getId(), "linkedstorage", shapedRecipe.getWidth(), shapedRecipe.getHeight(), shapedRecipe.getPreviewInputs(), shapedRecipe.getOutput());
+        super(shapedRecipe.getId(), "linkedstorage", shapedRecipe.getWidth(), shapedRecipe.getHeight(), shapedRecipe.getIngredients(), shapedRecipe.getOutput());
     }
 
     public ItemStack craft(CraftingInventory craftingInventory) {

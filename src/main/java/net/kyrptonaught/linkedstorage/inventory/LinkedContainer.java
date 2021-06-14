@@ -12,7 +12,6 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.GenericContainerScreenHandler;
-import net.minecraft.screen.Property;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.SlotActionType;
@@ -38,12 +37,12 @@ public class LinkedContainer extends GenericContainerScreenHandler {
     }
 
     @Override
-    public ItemStack onSlotClick(int slotId, int clickData, SlotActionType actionType, PlayerEntity player) {
+    public void onSlotClick(int slotId, int clickData, SlotActionType actionType, PlayerEntity player) {
         if (slotId > -1 && this.getSlot(slotId).getStack().getItem() instanceof StorageItem && getSlot(slotId).inventory instanceof PlayerInventory)
             if (dyeChannel.equals(LinkedInventoryHelper.getItemChannel(getSlot(slotId).getStack())))
-                return ItemStack.EMPTY;
+                return;
 
-        return super.onSlotClick(slotId, clickData, actionType, player);
+       super.onSlotClick(slotId, clickData, actionType, player);
     }
 
     public static ExtendedScreenHandlerFactory createScreenHandlerFactory(DyeChannel channel) {

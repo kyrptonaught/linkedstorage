@@ -9,23 +9,23 @@ import net.kyrptonaught.linkedstorage.network.ChannelViewers;
 import net.kyrptonaught.linkedstorage.util.DyeChannel;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.BlockPos;
 
 public class StorageBlockEntity extends OpenableBlockEntity implements BlockEntityClientSerializable {
     private DyeChannel dyeChannel = DyeChannel.defaultChannel();
     private LinkedInventory linkedInventory;
 
-    private StorageBlockEntity(BlockEntityType<?> blockEntityType_1) {
-        super(blockEntityType_1);
+    StorageBlockEntity(BlockPos pos, BlockState state) {
+        super(StorageBlock.blockEntity, pos, state);
     }
-
-    public StorageBlockEntity() {
-        this(StorageBlock.blockEntity);
+    StorageBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag compoundTag_1) {
-        super.fromTag(state, compoundTag_1);
+    public void readNbt(NbtCompound compoundTag_1) {
+        super.readNbt(compoundTag_1);
         dyeChannel = DyeChannel.fromTag(compoundTag_1);
         this.markDirty();
     }
@@ -41,8 +41,8 @@ public class StorageBlockEntity extends OpenableBlockEntity implements BlockEnti
         }
     }
 
-    public CompoundTag toTag(CompoundTag compoundTag_1) {
-        super.toTag(compoundTag_1);
+    public NbtCompound writeNbt(NbtCompound compoundTag_1) {
+        super.writeNbt(compoundTag_1);
         dyeChannel.toTag(compoundTag_1);
         return compoundTag_1;
     }
@@ -66,14 +66,14 @@ public class StorageBlockEntity extends OpenableBlockEntity implements BlockEnti
     }
 
     @Override
-    public void fromClientTag(CompoundTag tag) {
+    public void fromClientTag(NbtCompound tag) {
         dyeChannel = DyeChannel.fromTag(tag);
         this.markDirty();
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
-        return toTag(tag);
+    public NbtCompound toClientTag(NbtCompound tag) {
+        return writeNbt(tag);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package net.kyrptonaught.linkedstorage.util;
 
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventory;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.PersistentState;
 
 import java.util.HashMap;
@@ -14,48 +14,29 @@ public class ChannelManager extends PersistentState {
     public boolean migrated = false;
     private final String saveVersion = "1.0";
 
-    public ChannelManager(String key) {
-        super(key);
+    public ChannelManager() {
+        super();
     }
-
-    /*
-      public CompoundTag readTag(String id, int dataVersion) {
-            try {
-                CompoundTag data = NbtIo.readCompressed(new FileInputStream(new File(saveLocation, "linkedinventories.dat")));
-                fromTag(data);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    /*
-        public void save(File saveLocation) {
-            try {
-                CompoundTag data = new CompoundTag();
-                data = toTag(data);
-                NbtIo.writeCompressed(data, new FileOutputStream(new File(saveLocation, "linkedinventories.dat")));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    */
-    public void fromTag(CompoundTag tag) {
-        globalInventories.fromTag(tag);
-        personalInventories.clear();
-        CompoundTag personalInvs = tag.getCompound("personalInvs");
+    public static PersistentState fromNbt(NbtCompound tag) {
+        ChannelManager cman = new ChannelManager();
+        cman.globalInventories.fromTag(tag);
+        cman.personalInventories.clear();
+        NbtCompound personalInvs = tag.getCompound("personalInvs");
         personalInvs.getKeys().forEach(uuid -> {
             InventoryStorage personalInv = new InventoryStorage(uuid);
             personalInv.fromTag(personalInvs.getCompound(uuid));
-            personalInventories.put(UUID.fromString(uuid), personalInv);
+            cman.personalInventories.put(UUID.fromString(uuid), personalInv);
         });
-        migrated = tag.getBoolean("migrated");
+        cman.migrated = tag.getBoolean("migrated");
         String savedVersion = tag.getString("saveVersion");
-        if (!savedVersion.equals(saveVersion)) System.out.println("LinkedStorage savefile outdated");
+        if (!savedVersion.equals(cman.saveVersion)) System.out.println("LinkedStorage savefile outdated");
+        return cman;
     }
 
-    public CompoundTag toTag(CompoundTag tag) {
+    public NbtCompound writeNbt(NbtCompound tag) {
         globalInventories.toTag(tag);
-        CompoundTag personalInvs = new CompoundTag();
-        personalInventories.values().forEach(inventoryStorage -> personalInvs.put(inventoryStorage.name, inventoryStorage.toTag(new CompoundTag())));
+        NbtCompound personalInvs = new NbtCompound();
+        personalInventories.values().forEach(inventoryStorage -> personalInvs.put(inventoryStorage.name, inventoryStorage.toTag(new NbtCompound())));
         tag.put("personalInvs", personalInvs);
         tag.putBoolean("migrated", migrated);
         tag.putString("saveVersion", saveVersion);

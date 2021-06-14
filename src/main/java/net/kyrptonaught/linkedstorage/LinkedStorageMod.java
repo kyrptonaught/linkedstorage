@@ -18,13 +18,17 @@ import net.kyrptonaught.linkedstorage.util.DyeChannel;
 import net.kyrptonaught.linkedstorage.util.Migrator;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialRecipeSerializer;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.PersistentState;
 import net.minecraft.world.World;
+
+import java.util.function.Function;
 
 public class LinkedStorageMod implements ModInitializer {
     public static final String MOD_ID = "linkedstorage";
@@ -45,7 +49,7 @@ public class LinkedStorageMod implements ModInitializer {
         triDyeRecipe = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "tri_dyable_recipe"), new SpecialRecipeSerializer<>(TriDyableRecipe::new));
         copyDyeRecipe = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "copy_dye_recipe"), new CopyDyeRecipe.Serializer());
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            CMAN = server.getWorld(World.OVERWORLD).getPersistentStateManager().getOrCreate(() -> new ChannelManager(MOD_ID), MOD_ID);
+            CMAN = (ChannelManager) server.getWorld(World.OVERWORLD).getPersistentStateManager().getOrCreate(ChannelManager::fromNbt, ChannelManager::new, MOD_ID);
             Migrator.Migrate(server.getSavePath(WorldSavePath.ROOT).toFile(), CMAN);
         });
     }

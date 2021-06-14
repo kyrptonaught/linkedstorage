@@ -4,7 +4,7 @@ import net.kyrptonaught.linkedstorage.inventory.LinkedInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.collection.DefaultedList;
 
 import java.util.HashMap;
@@ -17,19 +17,19 @@ public class InventoryStorage {
         this.name = name;
     }
 
-    public void fromTag(CompoundTag tag) {
+    public void fromTag(NbtCompound tag) {
         inventories.clear();
-        CompoundTag invs = tag.getCompound("invs");
+        NbtCompound invs = tag.getCompound("invs");
         for (String key : invs.getKeys()) {
             inventories.put(key, fromList(invs.getCompound(key)));
         }
     }
 
-    public CompoundTag toTag(CompoundTag tag) {
-        CompoundTag invs = new CompoundTag();
+    public NbtCompound toTag(NbtCompound tag) {
+        NbtCompound invs = new NbtCompound();
         for (String key : inventories.keySet()) {
             if (!inventories.get(key).isEmpty())
-                invs.put(key, Inventories.toTag(new CompoundTag(), toList(inventories.get(key))));
+                invs.put(key, Inventories.writeNbt(new NbtCompound(), toList(inventories.get(key))));
         }
         tag.put("invs", invs);
         return tag;
@@ -49,10 +49,10 @@ public class InventoryStorage {
         return stacks;
     }
 
-    private LinkedInventory fromList(CompoundTag tag) {
+    private LinkedInventory fromList(NbtCompound tag) {
         LinkedInventory inventory = new LinkedInventory();
         DefaultedList<ItemStack> stacks = DefaultedList.ofSize(inventory.size(), ItemStack.EMPTY);
-        Inventories.fromTag(tag, stacks);
+        Inventories.readNbt(tag, stacks);
         for (int i = 0; i < stacks.size(); i++)
             inventory.setStack(i, stacks.get(i));
         return inventory;

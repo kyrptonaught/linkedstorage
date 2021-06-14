@@ -1,6 +1,6 @@
 package net.kyrptonaught.linkedstorage.util;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.DyeColor;
 
@@ -52,20 +52,20 @@ public class DyeChannel {
     }
 
     public void toBuf(PacketByteBuf buffer) {
-        buffer.writeCompoundTag(toTag(new CompoundTag()));
+        buffer.writeNbt(toTag(new NbtCompound()));
     }
 
     public static DyeChannel fromBuf(PacketByteBuf buffer) {
-        return fromTag(buffer.readCompoundTag());
+        return fromTag(buffer.readNbt());
     }
 
-    public CompoundTag toTag(CompoundTag tag) {
+    public NbtCompound toTag(NbtCompound tag) {
         tag.putInt("type", type);
         tag.putByteArray("dyechannel", dyeChannel);
         return tag;
     }
 
-    public static DyeChannel fromTag(CompoundTag tag) {
+    public static DyeChannel fromTag(NbtCompound tag) {
         DyeChannel dyeChannel = defaultChannel();
         if (tag.contains("dyechannel", 11)) {
             int[] oldChannel = tag.getIntArray("dyechannel");

@@ -4,19 +4,20 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.api.EnvironmentInterfaces;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.block.ChestAnimationProgress;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Tickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
-@EnvironmentInterfaces({@EnvironmentInterface(value = EnvType.CLIENT, itf = ChestAnimationProgress.class), @EnvironmentInterface(value = EnvType.CLIENT, itf = Tickable.class)})
-public class OpenableBlockEntity extends BlockEntity implements ChestAnimationProgress, Tickable {
-    OpenableBlockEntity(BlockEntityType<?> blockEntityType) {
-        super(blockEntityType);
+@EnvironmentInterfaces({@EnvironmentInterface(value = EnvType.CLIENT, itf = ChestAnimationProgress.class)})
+public class OpenableBlockEntity extends BlockEntity implements ChestAnimationProgress {
+    OpenableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state){
+        super(type, pos, state);
     }
 
     @Environment(EnvType.CLIENT)
@@ -33,20 +34,17 @@ public class OpenableBlockEntity extends BlockEntity implements ChestAnimationPr
     private float animationAngle;
     private float lastAnimationAngle;
 
-    @Override
     @Environment(EnvType.CLIENT)
-    public void tick() {
-        if (world != null && world.isClient) {
-            int viewerCount = countViewers();
-            lastAnimationAngle = animationAngle;
-            if (viewerCount > 0 && animationAngle == 0.0F) playSound(SoundEvents.BLOCK_ENDER_CHEST_OPEN);
-            if (viewerCount == 0 && animationAngle > 0.0F || viewerCount > 0 && animationAngle < 1.0F) {
-                float float_2 = animationAngle;
-                if (viewerCount > 0) animationAngle += 0.1F;
-                else animationAngle -= 0.1F;
-                animationAngle = MathHelper.clamp(animationAngle, 0, 1);
-                if (animationAngle < 0.5F && float_2 >= 0.5F) playSound(SoundEvents.BLOCK_ENDER_CHEST_CLOSE);
-            }
+    public void clientTick(){
+        int viewerCount = countViewers();
+        lastAnimationAngle = animationAngle;
+        if (viewerCount > 0 && animationAngle == 0.0F) playSound(SoundEvents.BLOCK_ENDER_CHEST_OPEN);
+        if (viewerCount == 0 && animationAngle > 0.0F || viewerCount > 0 && animationAngle < 1.0F) {
+            float float_2 = animationAngle;
+            if (viewerCount > 0) animationAngle += 0.1F;
+            else animationAngle -= 0.1F;
+            animationAngle = MathHelper.clamp(animationAngle, 0, 1);
+            if (animationAngle < 0.5F && float_2 >= 0.5F) playSound(SoundEvents.BLOCK_ENDER_CHEST_CLOSE);
         }
     }
 

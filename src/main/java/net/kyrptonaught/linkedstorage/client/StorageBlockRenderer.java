@@ -13,22 +13,23 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 
 @Environment(EnvType.CLIENT)
-public class StorageBlockRenderer extends BlockEntityRenderer<StorageBlockEntity> {
+public class StorageBlockRenderer implements BlockEntityRenderer<StorageBlockEntity> {
     private static final Identifier WOOL_TEXTURE = new Identifier("textures/block/white_wool.png");
     private static final Identifier DIAMOND_TEXTURE = new Identifier("textures/block/diamond_block.png");
+    LinkedChestModel model;
 
-    public StorageBlockRenderer(BlockEntityRenderDispatcher dispatcher) {
-        super(dispatcher);
-
+    public StorageBlockRenderer(BlockEntityRendererFactory.Context ctx) {
+        model = new LinkedChestModel(ctx);
     }
 
     @Override
@@ -42,14 +43,12 @@ public class StorageBlockRenderer extends BlockEntityRenderer<StorageBlockEntity
         BlockPos pos = blockEntity.getPos();
         BlockState state = world.getBlockState(pos);
 
-        LinkedChestModel model = new LinkedChestModel();
-
         //fixes crash with carpet
         if (state.getBlock() instanceof StorageBlock) {
             matrices.push();
             float f = state.get(StorageBlock.FACING).asRotation();
             matrices.translate(0.5D, 0.5D, 0.5D);
-            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-f));
+            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-f));
             matrices.translate(-0.5D, -0.5D, -0.5D);
 
             model.setLidPitch(blockEntity.getAnimationProgress(tickDelta));

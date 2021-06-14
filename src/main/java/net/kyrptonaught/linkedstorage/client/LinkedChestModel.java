@@ -2,11 +2,21 @@ package net.kyrptonaught.linkedstorage.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.Model;
-import net.minecraft.client.model.ModelPart;
+import net.fabricmc.fabric.impl.client.renderer.registry.EntityModelLayerImpl;
+import net.fabricmc.fabric.mixin.client.renderer.registry.EntityModelLayersAccessor;
+import net.kyrptonaught.linkedstorage.LinkedStorageMod;
+import net.kyrptonaught.linkedstorage.LinkedStorageModClient;
+import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.client.render.entity.model.EntityModelLayers;
+import net.minecraft.client.render.entity.model.EntityModelPartNames;
+import net.minecraft.client.render.entity.model.EntityModels;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 @Environment(EnvType.CLIENT)
 public class LinkedChestModel extends Model {
@@ -15,31 +25,28 @@ public class LinkedChestModel extends Model {
     public final ModelPart latch;
     public ModelPart button1, button2, button3;
 
-    public LinkedChestModel() {
+    public LinkedChestModel(BlockEntityRendererFactory.Context ctx) {
         super(RenderLayer::getEntityCutout);
-        this.textureWidth = 64;
-        this.textureHeight = 64;
-        this.base = new ModelPart(64, 64, 0, 19); // 818
-        this.base.addCuboid(1.0F, 0.0F, 1.0F, 14.0F, 10.0F, 14.0F, 0.0F);
-        this.lid = new ModelPart(64, 64, 0, 0);
-        this.lid.addCuboid(1.0F, 0.0F, 0.0F, 14.0F, 5.0F, 14.0F, 0.0F);//817
-        this.lid.pivotY = 9.0F;
-        this.lid.pivotZ = 1.0F;
-        this.latch = new ModelPart(64, 64, 0, 0);
-        this.latch.addCuboid(7.0F, -1.0F, 15.0F, 2.0F, 4.0F, 1.0F, 0.0F); //819
-        this.latch.pivotY = 8.0F;
-        button1 = new ModelPart(64, 64, 0, 19);
-        button2 = new ModelPart(64, 64, 0, 19);
-        button3 = new ModelPart(64, 64, 0, 19);
-        button1.addCuboid(4, 5, 5, 2, 1, 4, 0);
-        button2.addCuboid(7, 5, 5, 2, 1, 4, 0);
-        button3.addCuboid(10, 5, 5, 2, 1, 4, 0);
-        button1.pivotY = 9f;
-        button1.pivotZ = 1f;
-        button2.pivotY = 9f;
-        button2.pivotZ = 1f;
-        button3.pivotY = 9f;
-        button3.pivotZ = 1f;
+        ModelPart modelPart = ctx.getLayerModelPart(LinkedStorageModClient.LINKEDCHESTMODELLAYER);
+        this.base = modelPart.getChild("bottom");
+        this.lid = modelPart.getChild("lid");
+        this.latch = modelPart.getChild("lock");
+        this.button1 = modelPart.getChild("color1");
+        this.button2 = modelPart.getChild("color2");
+        this.button3 = modelPart.getChild("color3");
+    }
+
+    public static TexturedModelData getTexturedModelData() {
+        ModelData modelData = new ModelData();
+        ModelPartData modelPartData = modelData.getRoot();
+        modelPartData.addChild("bottom", ModelPartBuilder.create().uv(0, 19).cuboid(1.0F, 0.0F, 1.0F, 14.0F, 10.0F, 14.0F), ModelTransform.NONE);
+        modelPartData.addChild("lid", ModelPartBuilder.create().uv(0, 0).cuboid(1.0F, 0.0F, 0.0F, 14.0F, 5.0F, 14.0F), ModelTransform.pivot(0.0F, 9.0F, 1.0F));
+        modelPartData.addChild("lock", ModelPartBuilder.create().uv(0, 0).cuboid(7.0F, -1.0F, 15.0F, 2.0F, 4.0F, 1.0F), ModelTransform.pivot(0.0F, 8.0F, 0.0F));
+        modelPartData.addChild("color1", ModelPartBuilder.create().uv(0, 19).cuboid(4, 5, 5, 2, 1, 4), ModelTransform.pivot(0, 9f, 1f));
+        modelPartData.addChild("color2", ModelPartBuilder.create().uv(0, 19).cuboid(7, 5, 5, 2, 1, 4), ModelTransform.pivot(0, 9f, 1f));
+        modelPartData.addChild("color3", ModelPartBuilder.create().uv(0, 19).cuboid(10, 5, 5, 2, 1, 4), ModelTransform.pivot(0, 9f, 1f));
+
+        return TexturedModelData.of(modelData, 64, 64);
     }
 
     public void setLidPitch(float pitch) {

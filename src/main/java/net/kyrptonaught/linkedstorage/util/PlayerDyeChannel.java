@@ -2,7 +2,7 @@ package net.kyrptonaught.linkedstorage.util;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.DyeColor;
 
 import java.util.UUID;
@@ -37,7 +37,7 @@ public class PlayerDyeChannel extends DyeChannel {
 
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
+    public NbtCompound toTag(NbtCompound tag) {
         tag.putUuid("playerid", playerID);
         return super.toTag(tag);
     }
