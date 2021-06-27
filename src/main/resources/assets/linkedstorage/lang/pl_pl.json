@@ -1,0 +1,7 @@
+{
+  "container.linkedstorage": "Magazyn Międzywymiarowy",
+  "itemGroup.linkedstorage.linkedstorage": "Magazyn Międzywymiarowy",
+  "item.linkedstorage.storageitem": "Przenośny magazyn międzywymiarowy",
+  "block.linkedstorage.storageblock": "Magazyn międzywymiarowy",
+  "text.linkeditem.channel": "Ustawiono na: %s"
+}
