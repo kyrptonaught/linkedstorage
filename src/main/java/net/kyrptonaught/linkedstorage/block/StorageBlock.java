@@ -168,7 +168,6 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
         builder.add(FACING);
     }
 
-    @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new StorageBlockEntity(blockEntity,pos,state);

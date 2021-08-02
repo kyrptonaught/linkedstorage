@@ -1,0 +1,19 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "DDD",
+    " C ",
+    "   "
+  ],
+  "key": {
+    "C": {
+      "item": "linkedstorage:storageblock"
+    },
+    "D": {
+      "item": "minecraft:white_dye"
+    }
+  },
+  "result": {
+    "item": "linkedstorage:storageblock"
+  }
+}

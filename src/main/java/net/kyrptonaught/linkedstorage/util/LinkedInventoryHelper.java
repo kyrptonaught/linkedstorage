@@ -17,7 +17,7 @@ public class LinkedInventoryHelper {
     }
 
     public static void setItemChannel(DyeChannel channel, ItemStack stack) {
-        channel.clone().toTag(stack.getOrCreateTag());
+        channel.clone().toTag(stack.getOrCreateNbt());
     }
 
     public static DyeChannel getBlockChannel(World world, BlockPos pos) {
@@ -26,6 +26,6 @@ public class LinkedInventoryHelper {
     }
 
     public static DyeChannel getItemChannel(ItemStack stack) {
-        return DyeChannel.fromTag(stack.getOrCreateTag());
+        return DyeChannel.fromTag(stack.getOrCreateNbt());
     }
 }
