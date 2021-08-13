@@ -9,7 +9,8 @@
   ],
   "contact": {
     "homepage": "https://github.com/kyrptonaught/linkedstorage",
-    "sources": "https://github.com/kyrptonaught/linkedstorage"
+    "sources": "https://github.com/kyrptonaught/linkedstorage",
+    "issues": "https://github.com/kyrptonaught/linkedstorage/issues"
   },
   "license": "MIT",
   "icon": "assets/linkedstorage/icon.png",
