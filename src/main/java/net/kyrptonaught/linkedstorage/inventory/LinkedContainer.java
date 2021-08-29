@@ -9,7 +9,6 @@ import net.kyrptonaught.linkedstorage.util.LinkedInventoryHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
@@ -42,7 +41,7 @@ public class LinkedContainer extends GenericContainerScreenHandler {
             if (dyeChannel.equals(LinkedInventoryHelper.getItemChannel(getSlot(slotId).getStack())))
                 return;
 
-       super.onSlotClick(slotId, clickData, actionType, player);
+        super.onSlotClick(slotId, clickData, actionType, player);
     }
 
     public static ExtendedScreenHandlerFactory createScreenHandlerFactory(DyeChannel channel) {

@@ -17,6 +17,7 @@ public class ChannelManager extends PersistentState {
     public ChannelManager() {
         super();
     }
+
     public static PersistentState fromNbt(NbtCompound tag) {
         ChannelManager cman = new ChannelManager();
         cman.globalInventories.fromTag(tag);

@@ -18,18 +18,13 @@ import net.kyrptonaught.linkedstorage.util.DyeChannel;
 import net.kyrptonaught.linkedstorage.util.Migrator;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialRecipeSerializer;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.PersistentState;
 import net.minecraft.world.World;
-
-import java.util.function.Function;
 
 public class LinkedStorageMod implements ModInitializer {
     public static final String MOD_ID = "linkedstorage";

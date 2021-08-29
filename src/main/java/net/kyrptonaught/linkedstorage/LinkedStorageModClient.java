@@ -8,8 +8,8 @@ import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.impl.client.renderer.registry.EntityModelLayerImpl;
 import net.fabricmc.fabric.impl.client.rendering.ColorProviderRegistryImpl;
+import net.fabricmc.fabric.impl.client.rendering.EntityModelLayerImpl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.kyrptonaught.linkedstorage.block.StorageBlock;
 import net.kyrptonaught.linkedstorage.client.LinkedChestModel;
@@ -31,12 +31,13 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class LinkedStorageModClient implements ClientModInitializer {
     public static final Identifier TEXTURE = new Identifier(LinkedStorageMod.MOD_ID, "block/linkedstorage");
-    public static final EntityModelLayer LINKEDCHESTMODELLAYER =  new EntityModelLayer(new Identifier(LinkedStorageMod.MOD_ID, "linkedchest"),"main");
+    public static final EntityModelLayer LINKEDCHESTMODELLAYER = new EntityModelLayer(new Identifier(LinkedStorageMod.MOD_ID, "linkedchest"), "main");
+
     @Override
     public void onInitializeClient() {
         EntityModelLayerImpl.PROVIDERS.put(LINKEDCHESTMODELLAYER, LinkedChestModel::getTexturedModelData);
         BlockEntityRendererRegistry.INSTANCE.register(StorageBlock.blockEntity, StorageBlockRenderer::new);
-        FabricModelPredicateProviderRegistry.register(ModItems.storageItem, new Identifier("open"), (stack, world, entity, seed)-> {
+        FabricModelPredicateProviderRegistry.register(ModItems.storageItem, new Identifier("open"), (stack, world, entity, seed) -> {
             String channel = LinkedInventoryHelper.getItemChannel(stack).getChannelName();
             return ChannelViewers.getViewersFor(channel) ? 1 : 0;
         });

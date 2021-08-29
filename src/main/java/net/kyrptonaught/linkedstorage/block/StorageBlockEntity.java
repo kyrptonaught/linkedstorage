@@ -19,6 +19,7 @@ public class StorageBlockEntity extends OpenableBlockEntity implements BlockEnti
     StorageBlockEntity(BlockPos pos, BlockState state) {
         super(StorageBlock.blockEntity, pos, state);
     }
+
     StorageBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }

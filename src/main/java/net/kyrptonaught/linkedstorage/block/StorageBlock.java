@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.network.OpenStoragePacket;
 import net.kyrptonaught.linkedstorage.network.SetDyePacket;
-import net.kyrptonaught.linkedstorage.register.ModBlocks;
 import net.kyrptonaught.linkedstorage.util.DyeChannel;
 import net.kyrptonaught.linkedstorage.util.LinkedInventoryHelper;
 import net.kyrptonaught.linkedstorage.util.PlayerDyeChannel;
@@ -14,7 +13,6 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,7 +36,6 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -48,7 +45,7 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
     public StorageBlock(Settings block$Settings_1) {
         super(block$Settings_1);
         Registry.register(Registry.BLOCK, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), this);
-        blockEntity = Registry.register(Registry.BLOCK_ENTITY_TYPE, LinkedStorageMod.MOD_ID + ":storageblock", FabricBlockEntityTypeBuilder.create(StorageBlockEntity::new,this).build(null));
+        blockEntity = Registry.register(Registry.BLOCK_ENTITY_TYPE, LinkedStorageMod.MOD_ID + ":storageblock", FabricBlockEntityTypeBuilder.create(StorageBlockEntity::new, this).build(null));
         Registry.register(Registry.ITEM, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), new BlockItem(this, new Item.Settings().group(LinkedStorageMod.GROUP)));
         this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
     }
@@ -170,10 +167,11 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
 
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new StorageBlockEntity(blockEntity,pos,state);
+        return new StorageBlockEntity(blockEntity, pos, state);
     }
+
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return world.isClient  & type == blockEntity ? (world1, pos, state1, blockEntity) -> ((OpenableBlockEntity)blockEntity).clientTick() : null;
+        return world.isClient & type == blockEntity ? (world1, pos, state1, blockEntity) -> ((OpenableBlockEntity) blockEntity).clientTick() : null;
     }
 }

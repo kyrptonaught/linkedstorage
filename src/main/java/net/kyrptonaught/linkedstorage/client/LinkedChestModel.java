@@ -2,21 +2,12 @@ package net.kyrptonaught.linkedstorage.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.impl.client.renderer.registry.EntityModelLayerImpl;
-import net.fabricmc.fabric.mixin.client.renderer.registry.EntityModelLayersAccessor;
-import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.LinkedStorageModClient;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.render.entity.model.EntityModelLayers;
-import net.minecraft.client.render.entity.model.EntityModelPartNames;
-import net.minecraft.client.render.entity.model.EntityModels;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 @Environment(EnvType.CLIENT)
 public class LinkedChestModel extends Model {

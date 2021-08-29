@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtList;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -19,7 +20,7 @@ public class Migrator {
                     NbtList componentList = data.getList("cardinal_components", NbtType.COMPOUND);
                     componentList.stream().map(NbtCompound.class::cast).forEach(nbt -> {
                         if (nbt.getString("componentId").equals("linkedstorage:sman")) {
-                            CMAN.fromNbt(nbt);
+                            ChannelManager.fromNbt(nbt);
                             CMAN.migrated = true;
                         }
                     });

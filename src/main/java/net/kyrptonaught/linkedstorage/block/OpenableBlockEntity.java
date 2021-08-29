@@ -16,7 +16,7 @@ import net.minecraft.util.math.MathHelper;
 
 @EnvironmentInterfaces({@EnvironmentInterface(value = EnvType.CLIENT, itf = ChestAnimationProgress.class)})
 public class OpenableBlockEntity extends BlockEntity implements ChestAnimationProgress {
-    OpenableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state){
+    OpenableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
@@ -35,7 +35,7 @@ public class OpenableBlockEntity extends BlockEntity implements ChestAnimationPr
     private float lastAnimationAngle;
 
     @Environment(EnvType.CLIENT)
-    public void clientTick(){
+    public void clientTick() {
         int viewerCount = countViewers();
         lastAnimationAngle = animationAngle;
         if (viewerCount > 0 && animationAngle == 0.0F) playSound(SoundEvents.BLOCK_ENDER_CHEST_OPEN);
