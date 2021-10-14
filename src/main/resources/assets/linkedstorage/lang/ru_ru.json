@@ -1,7 +1,7 @@
 {
-  "container.linkedstorage": "Связанное хранилище",
-  "itemGroup.linkedstorage.linkedstorage": "Связанное хранилище",
-  "item.linkedstorage.storageitem": "Сумка Края",
-  "block.linkedstorage.storageblock": "Сундук Края",
-  "text.linkeditem.channel": "Значение: %s"
+  "container.linkedstorage": "Объединённое хранилище",
+  "itemGroup.linkedstorage.linkedstorage": "Объединённое хранилище",
+  "item.linkedstorage.storageitem": "Портативное хранилище",
+  "block.linkedstorage.storageblock": "Блок-хранилище",
+  "text.linkeditem.channel": "Установлено на: %s"
 }
