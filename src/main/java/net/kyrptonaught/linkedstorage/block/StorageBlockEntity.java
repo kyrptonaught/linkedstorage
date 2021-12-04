@@ -1,8 +1,8 @@
 package net.kyrptonaught.linkedstorage.block;
 
+import com.google.common.base.Preconditions;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.inventory.LinkedInventory;
 import net.kyrptonaught.linkedstorage.network.ChannelViewers;
@@ -10,9 +10,11 @@ import net.kyrptonaught.linkedstorage.util.DyeChannel;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 
-public class StorageBlockEntity extends OpenableBlockEntity implements BlockEntityClientSerializable {
+public class StorageBlockEntity extends OpenableBlockEntity {
     private DyeChannel dyeChannel = DyeChannel.defaultChannel();
     private LinkedInventory linkedInventory;
 
@@ -31,6 +33,12 @@ public class StorageBlockEntity extends OpenableBlockEntity implements BlockEnti
         this.markDirty();
     }
 
+    @Override
+    public void writeNbt(NbtCompound compoundTag_1) {
+        super.writeNbt(compoundTag_1);
+        dyeChannel.toTag(compoundTag_1);
+    }
+
     LinkedInventory getLinkedInventory() {
         if (linkedInventory == null) updateInventory();
         return linkedInventory;
@@ -40,12 +48,6 @@ public class StorageBlockEntity extends OpenableBlockEntity implements BlockEnti
         if (!world.isClient) {
             linkedInventory = LinkedStorageMod.getInventory(dyeChannel);
         }
-    }
-
-    public NbtCompound writeNbt(NbtCompound compoundTag_1) {
-        super.writeNbt(compoundTag_1);
-        dyeChannel.toTag(compoundTag_1);
-        return compoundTag_1;
     }
 
     public void setDye(int slot, int dye) {
@@ -67,14 +69,24 @@ public class StorageBlockEntity extends OpenableBlockEntity implements BlockEnti
     }
 
     @Override
-    public void fromClientTag(NbtCompound tag) {
-        dyeChannel = DyeChannel.fromTag(tag);
-        this.markDirty();
+    public final BlockEntityUpdateS2CPacket toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
     }
 
     @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        return writeNbt(tag);
+    public final NbtCompound toInitialChunkDataNbt() {
+        NbtCompound nbt = super.toInitialChunkDataNbt();
+        writeNbt(nbt);
+        return nbt;
+    }
+
+    // Thank you Fabric API
+    public void sync() {
+        Preconditions.checkNotNull(world); // Maintain distinct failure case from below
+        if (!(world instanceof ServerWorld))
+            throw new IllegalStateException("Cannot call sync() on the logical client! Did you check world.isClient first?");
+
+        ((ServerWorld) world).getChunkManager().markForUpdate(getPos());
     }
 
     @Override
