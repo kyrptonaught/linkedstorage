@@ -36,8 +36,7 @@ public class DyeChannel {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof DyeChannel)) return false;
-        DyeChannel otherChannel = (DyeChannel) other;
+        if (!(other instanceof DyeChannel otherChannel)) return false;
         if (type != otherChannel.type)
             return false;
         if (otherChannel instanceof PlayerDyeChannel)
