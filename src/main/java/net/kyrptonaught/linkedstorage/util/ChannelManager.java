@@ -8,11 +8,9 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class ChannelManager extends PersistentState {
-
-    private final InventoryStorage globalInventories = new InventoryStorage(null);
+    public final static String SAVEVERSION = "2.0";
+    private final InventoryStorage globalInventories = new InventoryStorage("GLOBAL");
     private final HashMap<UUID, InventoryStorage> personalInventories = new HashMap<>();
-    public boolean migrated = false;
-    private final String saveVersion = "1.0";
 
     public ChannelManager() {
         super();
@@ -28,19 +26,20 @@ public class ChannelManager extends PersistentState {
             personalInv.fromTag(personalInvs.getCompound(uuid));
             cman.personalInventories.put(UUID.fromString(uuid), personalInv);
         });
-        cman.migrated = tag.getBoolean("migrated");
         String savedVersion = tag.getString("saveVersion");
-        if (!savedVersion.equals(cman.saveVersion)) System.out.println("LinkedStorage savefile outdated");
+        if (!savedVersion.equals(SAVEVERSION)) Migrator.Migrate(cman, savedVersion);
         return cman;
     }
 
     public NbtCompound writeNbt(NbtCompound tag) {
         globalInventories.toTag(tag);
         NbtCompound personalInvs = new NbtCompound();
-        personalInventories.values().forEach(inventoryStorage -> personalInvs.put(inventoryStorage.name, inventoryStorage.toTag(new NbtCompound())));
+        personalInventories.values().forEach(inventoryStorage -> {
+            if (inventoryStorage.getInventories().size() > 0)
+                personalInvs.put(inventoryStorage.name, inventoryStorage.toTag(new NbtCompound()));
+        });
         tag.put("personalInvs", personalInvs);
-        tag.putBoolean("migrated", migrated);
-        tag.putString("saveVersion", saveVersion);
+        tag.putString("saveVersion", SAVEVERSION);
         return tag;
     }
 
@@ -54,6 +53,14 @@ public class ChannelManager extends PersistentState {
         if (!personalInventories.containsKey(dyeChannel.playerID))
             personalInventories.put(dyeChannel.playerID, new InventoryStorage(dyeChannel.playerID.toString()));
         return personalInventories.get(dyeChannel.playerID).getInv(dyeChannel);
+    }
+
+    public InventoryStorage getGlobalInventories() {
+        return globalInventories;
+    }
+
+    public HashMap<UUID, InventoryStorage> getPersonalInventories() {
+        return personalInventories;
     }
 
     @Override

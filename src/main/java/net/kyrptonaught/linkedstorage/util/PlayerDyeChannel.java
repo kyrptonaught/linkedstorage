@@ -1,15 +1,23 @@
 package net.kyrptonaught.linkedstorage.util;
 
+import com.mojang.authlib.GameProfile;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.DyeColor;
+import net.minecraft.server.integrated.IntegratedServer;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class PlayerDyeChannel extends DyeChannel {
     public UUID playerID;
-    private String playerName;
+    private Text playerName;
 
     public PlayerDyeChannel(UUID playerID, byte[] dyeChannel) {
         super(dyeChannel);
@@ -19,7 +27,12 @@ public class PlayerDyeChannel extends DyeChannel {
 
     @Override
     public String getChannelName() {
-        return playerID + super.getChannelName();
+        return playerID + ":" + super.getChannelName();
+    }
+
+    @Override
+    public String getSaveName() {
+        return super.getChannelName();
     }
 
     @Override
@@ -29,12 +42,18 @@ public class PlayerDyeChannel extends DyeChannel {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public String getCleanName() {
-        // if (playerName == null)
-        //  playerName = MinecraftClient.getInstance().getNetworkHandler().getPlayerListEntry(playerID).getDisplayName().asFormattedString();
-        return "Playerbound, " + DyeColor.byId(super.dyeChannel[0]).getName() + ", " + DyeColor.byId(super.dyeChannel[1]).getName() + ", " + DyeColor.byId(super.dyeChannel[2]).getName();
+    public List<Text> getCleanName() {
+        if (playerName == null) {
+            IntegratedServer server = MinecraftClient.getInstance().getServer();
+            Optional<GameProfile> player = Optional.empty();
+            if (server != null)
+                player = server.getUserCache().getByUuid(playerID);
+            playerName = player.isPresent() ? new LiteralText(player.get().getName()) : new TranslatableText("text.linkeditem.unknownplayerdyechannel");
+        }
+        ArrayList<Text> output = new ArrayList<>(super.getCleanName());
+        output.add(0, new TranslatableText("text.linkeditem.playerdyechannel", playerName));
+        return output;
     }
-
 
     @Override
     public NbtCompound toTag(NbtCompound tag) {

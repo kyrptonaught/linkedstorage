@@ -20,8 +20,8 @@ import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.*;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.state.StateManager;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -157,7 +157,9 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, BlockView view, List<Text> tooltip, TooltipContext options) {
         DyeChannel channel = LinkedInventoryHelper.getItemChannel(stack);
-        tooltip.add(new TranslatableText("text.linkeditem.channel", channel.getCleanName()).formatted(Formatting.GRAY));
+        for (Text text : channel.getCleanName()) {
+            tooltip.add(((MutableText) text).formatted(Formatting.GRAY));
+        }
     }
 
     @Override

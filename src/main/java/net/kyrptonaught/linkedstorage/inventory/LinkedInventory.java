@@ -30,4 +30,13 @@ public class LinkedInventory extends SimpleInventory implements SidedInventory {
     public boolean canExtract(int var1, ItemStack var2, Direction var3) {
         return true;
     }
+
+    public LinkedInventory copy() {
+        LinkedInventory copy = new LinkedInventory();
+
+        for (int i = 0; i < this.size(); i++)
+            copy.setStack(i, this.getStack(i).copy());
+
+        return copy;
+    }
 }

@@ -15,14 +15,12 @@ import net.kyrptonaught.linkedstorage.register.ModBlocks;
 import net.kyrptonaught.linkedstorage.register.ModItems;
 import net.kyrptonaught.linkedstorage.util.ChannelManager;
 import net.kyrptonaught.linkedstorage.util.DyeChannel;
-import net.kyrptonaught.linkedstorage.util.Migrator;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialRecipeSerializer;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
@@ -46,7 +44,6 @@ public class LinkedStorageMod implements ModInitializer {
         copyDyeRecipe = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "copy_dye_recipe"), new CopyDyeRecipe.Serializer());
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             CMAN = (ChannelManager) server.getWorld(World.OVERWORLD).getPersistentStateManager().getOrCreate(ChannelManager::fromNbt, ChannelManager::new, MOD_ID);
-            Migrator.Migrate(server.getSavePath(WorldSavePath.ROOT).toFile(), CMAN);
         });
     }
 

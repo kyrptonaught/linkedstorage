@@ -2,11 +2,14 @@ package net.kyrptonaught.linkedstorage.util;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DyeColor;
 
+import java.util.List;
 import java.util.UUID;
 
-public class DyeChannel {
+public class DyeChannel implements Cloneable {
     public byte[] dyeChannel;
     protected int type = 0;
 
@@ -19,11 +22,19 @@ public class DyeChannel {
     }
 
     public String getChannelName() {
-        return dyeChannel[0] + "" + dyeChannel[1] + "" + dyeChannel[2];
+        return dyeChannel[0] + ":" + dyeChannel[1] + ":" + dyeChannel[2];
     }
 
-    public String getCleanName() {
-        return DyeColor.byId(dyeChannel[0]).getName() + ", " + DyeColor.byId(dyeChannel[1]).getName() + ", " + DyeColor.byId(dyeChannel[2]).getName();
+    public List<Text> getCleanName() {
+        Text dyechannel = new TranslatableText("item.minecraft.firework_star." + DyeColor.byId(dyeChannel[0]).getName()).append(", ")
+                .append(new TranslatableText("item.minecraft.firework_star." + DyeColor.byId(dyeChannel[1]).getName())).append(", ")
+                .append(new TranslatableText("item.minecraft.firework_star." + DyeColor.byId(dyeChannel[2]).getName()));
+
+        return List.of(new TranslatableText("text.linkeditem.channel", dyechannel));
+    }
+
+    public String getSaveName() {
+        return getChannelName();
     }
 
     public DyeChannel clone() {

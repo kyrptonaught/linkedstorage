@@ -36,7 +36,7 @@ public class InventoryStorage {
     }
 
     public LinkedInventory getInv(DyeChannel dyeChannel) {
-        String channel = dyeChannel.getChannelName();
+        String channel = dyeChannel.getSaveName();
         if (!inventories.containsKey(channel))
             inventories.put(channel, new LinkedInventory());
         return inventories.get(channel);
@@ -56,5 +56,9 @@ public class InventoryStorage {
         for (int i = 0; i < stacks.size(); i++)
             inventory.setStack(i, stacks.get(i));
         return inventory;
+    }
+
+    public HashMap<String, LinkedInventory> getInventories() {
+        return inventories;
     }
 }

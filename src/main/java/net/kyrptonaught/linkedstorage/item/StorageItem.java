@@ -12,8 +12,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.*;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
@@ -51,8 +51,10 @@ public class StorageItem extends Item {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void appendTooltip(ItemStack itemStack_1, World world_1, List<Text> list_1, TooltipContext tooltipContext_1) {
-        DyeChannel channel = LinkedInventoryHelper.getItemChannel(itemStack_1);
-        list_1.add(new TranslatableText("text.linkeditem.channel", channel.getCleanName()).formatted(Formatting.GRAY));
+    public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext options) {
+        DyeChannel channel = LinkedInventoryHelper.getItemChannel(stack);
+        for (Text text : channel.getCleanName()) {
+            tooltip.add(((MutableText) text).formatted(Formatting.GRAY));
+        }
     }
 }
