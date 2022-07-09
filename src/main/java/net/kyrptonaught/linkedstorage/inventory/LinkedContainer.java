@@ -16,7 +16,6 @@ import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 public class LinkedContainer extends GenericContainerScreenHandler {
     DyeChannel dyeChannel;
@@ -54,7 +53,7 @@ public class LinkedContainer extends GenericContainerScreenHandler {
 
             @Override
             public Text getDisplayName() {
-                return new TranslatableText("container.linkedstorage");
+                return Text.translatable("container.linkedstorage");
             }
 
             @Override
