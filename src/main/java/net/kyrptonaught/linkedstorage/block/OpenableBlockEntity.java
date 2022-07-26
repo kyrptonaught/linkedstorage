@@ -7,15 +7,15 @@ import net.fabricmc.api.EnvironmentInterfaces;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.block.ChestAnimationProgress;
+import net.minecraft.block.entity.LidOpenable;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
-@EnvironmentInterfaces({@EnvironmentInterface(value = EnvType.CLIENT, itf = ChestAnimationProgress.class)})
-public class OpenableBlockEntity extends BlockEntity implements ChestAnimationProgress {
+@EnvironmentInterfaces({@EnvironmentInterface(value = EnvType.CLIENT, itf = LidOpenable.class)})
+public class OpenableBlockEntity extends BlockEntity implements LidOpenable {
     OpenableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }

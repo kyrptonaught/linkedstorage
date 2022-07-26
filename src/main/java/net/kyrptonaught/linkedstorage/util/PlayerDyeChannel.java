@@ -6,9 +6,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.integrated.IntegratedServer;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,10 +46,10 @@ public class PlayerDyeChannel extends DyeChannel {
             Optional<GameProfile> player = Optional.empty();
             if (server != null)
                 player = server.getUserCache().getByUuid(playerID);
-            playerName = player.isPresent() ? new LiteralText(player.get().getName()) : new TranslatableText("text.linkeditem.unknownplayerdyechannel");
+            playerName = player.isPresent() ? Text.literal(player.get().getName()) : Text.translatable("text.linkeditem.unknownplayerdyechannel");
         }
         ArrayList<Text> output = new ArrayList<>(super.getCleanName());
-        output.add(0, new TranslatableText("text.linkeditem.playerdyechannel", playerName));
+        output.add(0, Text.translatable("text.linkeditem.playerdyechannel", playerName));
         return output;
     }
 

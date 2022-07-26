@@ -3,7 +3,7 @@ package net.kyrptonaught.linkedstorage.network;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.inventory.LinkedContainer;
 import net.kyrptonaught.linkedstorage.util.LinkedInventoryHelper;
@@ -19,10 +19,9 @@ public class OpenStoragePacket {
     private static final Identifier OPEN_STORAGE_PACKET = new Identifier(LinkedStorageMod.MOD_ID, "openpacket");
 
     public static void registerReceivePacket() {
-        ServerSidePacketRegistry.INSTANCE.register(OPEN_STORAGE_PACKET, (packetContext, packetByteBuf) -> {
-            BlockPos pos = packetByteBuf.readBlockPos();
-            packetContext.getTaskQueue().execute(() -> {
-                PlayerEntity player = packetContext.getPlayer();
+        ServerPlayNetworking.registerGlobalReceiver(OPEN_STORAGE_PACKET, (server, player, handler, buf, responseSender) -> {
+            BlockPos pos = buf.readBlockPos();
+            server.execute(() -> {
                 World world = player.getEntityWorld();
                 player.openHandledScreen(LinkedContainer.createScreenHandlerFactory(LinkedInventoryHelper.getBlockChannel(world, pos)));
             });

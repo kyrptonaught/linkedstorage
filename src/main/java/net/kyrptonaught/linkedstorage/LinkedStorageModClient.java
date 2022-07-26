@@ -3,7 +3,7 @@ package net.kyrptonaught.linkedstorage;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
@@ -36,7 +36,7 @@ public class LinkedStorageModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         EntityModelLayerImpl.PROVIDERS.put(LINKEDCHESTMODELLAYER, LinkedChestModel::getTexturedModelData);
-        BlockEntityRendererRegistry.INSTANCE.register(StorageBlock.blockEntity, StorageBlockRenderer::new);
+        BlockEntityRendererRegistry.register(StorageBlock.blockEntity, StorageBlockRenderer::new);
         FabricModelPredicateProviderRegistry.register(ModItems.storageItem, new Identifier("open"), (stack, world, entity, seed) -> {
             String channel = LinkedInventoryHelper.getItemChannel(stack).getChannelName();
             return ChannelViewers.getViewersFor(channel) ? 1 : 0;

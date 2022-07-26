@@ -1,7 +1,7 @@
 package net.kyrptonaught.linkedstorage.network;
 
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
@@ -14,11 +14,11 @@ public class UpdateViewerList {
     private static final Identifier UPDATE_VIEWERS = new Identifier(LinkedStorageMod.MOD_ID, "updateviewers");
 
     public static void registerReceivePacket() {
-        ClientSidePacketRegistry.INSTANCE.register(UPDATE_VIEWERS, (packetContext, packetByteBuf) -> {
-            String channel = packetByteBuf.readString(32767);
-            UUID uuid = packetByteBuf.readUuid();
-            boolean adding = packetByteBuf.readBoolean();
-            packetContext.getTaskQueue().execute(() -> {
+        ClientPlayNetworking.registerGlobalReceiver(UPDATE_VIEWERS, (client, handler, buf, responseSender) -> {
+            String channel = buf.readString(32767);
+            UUID uuid = buf.readUuid();
+            boolean adding = buf.readBoolean();
+            client.execute(() -> {
                 if (adding)
                     ChannelViewers.addViewerFor(channel, uuid);
                 else

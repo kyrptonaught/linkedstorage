@@ -3,7 +3,6 @@ package net.kyrptonaught.linkedstorage.util;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DyeColor;
 
 import java.util.List;
@@ -26,11 +25,11 @@ public class DyeChannel implements Cloneable {
     }
 
     public List<Text> getCleanName() {
-        Text dyechannel = new TranslatableText("item.minecraft.firework_star." + DyeColor.byId(dyeChannel[0]).getName()).append(", ")
-                .append(new TranslatableText("item.minecraft.firework_star." + DyeColor.byId(dyeChannel[1]).getName())).append(", ")
-                .append(new TranslatableText("item.minecraft.firework_star." + DyeColor.byId(dyeChannel[2]).getName()));
+        Text dyechannel = Text.translatable("item.minecraft.firework_star." + DyeColor.byId(dyeChannel[0]).getName()).append(", ")
+                .append(Text.translatable("item.minecraft.firework_star." + DyeColor.byId(dyeChannel[1]).getName())).append(", ")
+                .append(Text.translatable("item.minecraft.firework_star." + DyeColor.byId(dyeChannel[2]).getName()));
 
-        return List.of(new TranslatableText("text.linkeditem.channel", dyechannel));
+        return List.of(Text.translatable("text.linkeditem.channel", dyechannel));
     }
 
     public String getSaveName() {
