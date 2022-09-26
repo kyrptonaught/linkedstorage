@@ -10,12 +10,31 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
+repositories {
+	maven { url 'https://maven.fabricmc.net' }
+	maven { url "https://maven.kyrptonaught.dev" }
+	maven { url "https://maven.shedaniel.me/" }
+	maven { url "https://maven.terraformersmc.com/releases" }
+}
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation  "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation  "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	optionalDependency('net.kyrptonaught:quickshulker:1.3.9-1.18')
+}
+
+def optionalDependency(String dep) {
+	dependencies.modRuntimeOnly (dep) {
+		exclude group: "net.fabricmc.fabric-api"
+		exclude module: "nbt-crafting"
+	}
+	dependencies.modCompileOnly (dep) {
+		exclude group: "net.fabricmc.fabric-api"
+		exclude module: "nbt-crafting"
+	}
 }
 
 processResources {
