@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "linkedstorage",
-  "version": "1.5.0-1.19",
+  "version": "1.5.1-1.19",
   "name": "Linked Storage",
   "description": "Linkable storage's!",
   "authors": [
@@ -22,8 +22,8 @@
     "client": [
       "net.kyrptonaught.linkedstorage.LinkedStorageModClient"
     ],
-    "registerbirpis": [
-      "net.kyrptonaught.linkedstorage.LinkedStorageModClient"
+    "quickshulker": [
+      "net.kyrptonaught.linkedstorage.compat.Quickshulker"
     ]
   },
   "depends": {
