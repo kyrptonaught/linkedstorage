@@ -18,7 +18,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
 import net.minecraft.world.World;
 
 @Environment(EnvType.CLIENT)
@@ -47,7 +47,7 @@ public class StorageBlockRenderer implements BlockEntityRenderer<StorageBlockEnt
             matrices.push();
             float f = state.get(StorageBlock.FACING).asRotation();
             matrices.translate(0.5D, 0.5D, 0.5D);
-            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-f));
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-f));
             matrices.translate(-0.5D, -0.5D, -0.5D);
 
             model.setLidPitch(blockEntity.getAnimationProgress(tickDelta));
