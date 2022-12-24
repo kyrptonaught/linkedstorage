@@ -3,6 +3,7 @@ package net.kyrptonaught.linkedstorage.block;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.network.OpenStoragePacket;
 import net.kyrptonaught.linkedstorage.network.SetDyePacket;
@@ -18,6 +19,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.*;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.Registries;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.MutableText;
@@ -30,7 +33,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -44,9 +46,11 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
 
     public StorageBlock(Settings block$Settings_1) {
         super(block$Settings_1);
-        Registry.register(Registry.BLOCK, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), this);
-        blockEntity = Registry.register(Registry.BLOCK_ENTITY_TYPE, LinkedStorageMod.MOD_ID + ":storageblock", FabricBlockEntityTypeBuilder.create(StorageBlockEntity::new, this).build(null));
-        Registry.register(Registry.ITEM, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), new BlockItem(this, new Item.Settings().group(LinkedStorageMod.GROUP)));
+        Registry.register(Registries.BLOCK, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), this);
+        blockEntity = Registry.register(Registries.BLOCK_ENTITY_TYPE, LinkedStorageMod.MOD_ID + ":storageblock", FabricBlockEntityTypeBuilder.create(StorageBlockEntity::new, this).build(null));
+        BlockItem item = new BlockItem(this, new Item.Settings());
+	ItemGroupEvents.modifyEntriesEvent(LinkedStorageMod.GROUP).register(entries -> entries.add(this));
+        Registry.register(Registries.ITEM, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), item);
         this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
     }
 

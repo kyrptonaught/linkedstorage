@@ -8,12 +8,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.ShapedRecipe;
+import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.util.Identifier;
 
 public class CopyDyeRecipe extends ShapedRecipe {
 
     public CopyDyeRecipe(ShapedRecipe shapedRecipe) {
-        super(shapedRecipe.getId(), "linkedstorage", shapedRecipe.getWidth(), shapedRecipe.getHeight(), shapedRecipe.getIngredients(), shapedRecipe.getOutput());
+        super(shapedRecipe.getId(), "linkedstorage", shapedRecipe.getCategory(), shapedRecipe.getWidth(), shapedRecipe.getHeight(), shapedRecipe.getIngredients(), shapedRecipe.getOutput());
     }
 
     public ItemStack craft(CraftingInventory craftingInventory) {
