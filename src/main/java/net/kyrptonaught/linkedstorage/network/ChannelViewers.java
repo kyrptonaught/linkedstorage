@@ -24,7 +24,7 @@ public class ChannelViewers {
 
     public static void addViewerFor(String channel, PlayerEntity player) {
         addViewerFor(channel, player.getUuid());
-        if (!player.world.isClient)
+        if (!player.getWorld().isClient)
             UpdateViewerList.sendPacket(player.getServer(), channel, player.getUuid(), true);
     }
 

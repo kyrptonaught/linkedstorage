@@ -10,6 +10,5 @@ public class ModItems {
 
     public static void register() {
         storageItem = new StorageItem(new Item.Settings().maxCount(1));
-	ItemGroupEvents.modifyEntriesEvent(LinkedStorageMod.GROUP).register(entries -> entries.add(storageItem));
     }
 }

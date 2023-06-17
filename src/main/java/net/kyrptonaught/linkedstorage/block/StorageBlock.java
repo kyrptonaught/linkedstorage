@@ -49,7 +49,7 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
         Registry.register(Registries.BLOCK, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), this);
         blockEntity = Registry.register(Registries.BLOCK_ENTITY_TYPE, LinkedStorageMod.MOD_ID + ":storageblock", FabricBlockEntityTypeBuilder.create(StorageBlockEntity::new, this).build(null));
         BlockItem item = new BlockItem(this, new Item.Settings());
-	ItemGroupEvents.modifyEntriesEvent(LinkedStorageMod.GROUP).register(entries -> entries.add(this));
+
         Registry.register(Registries.ITEM, new Identifier(LinkedStorageMod.MOD_ID, "storageblock"), item);
         this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
     }
@@ -124,7 +124,7 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
+        return this.getDefaultState().with(FACING, ctx.getPlayerLookDirection().getOpposite());
     }
 
     public BlockRenderType getRenderType(BlockState blockState_1) {

@@ -4,22 +4,25 @@ import com.google.gson.JsonObject;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.util.LinkedInventoryHelper;
 import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 
 public class CopyDyeRecipe extends ShapedRecipe {
 
     public CopyDyeRecipe(ShapedRecipe shapedRecipe) {
-        super(shapedRecipe.getId(), "linkedstorage", shapedRecipe.getCategory(), shapedRecipe.getWidth(), shapedRecipe.getHeight(), shapedRecipe.getIngredients(), shapedRecipe.getOutput());
+        super(shapedRecipe.getId(), "linkedstorage", shapedRecipe.getCategory(), shapedRecipe.getWidth(), shapedRecipe.getHeight(), shapedRecipe.getIngredients(), shapedRecipe.getOutput(null));
     }
 
-    public ItemStack craft(CraftingInventory craftingInventory) {
-        ItemStack output = this.getOutput().copy();
-        LinkedInventoryHelper.setItemChannel(LinkedInventoryHelper.getItemChannel(craftingInventory.getStack(4)), output);
+    @Override
+    public ItemStack craft(RecipeInputInventory inv, DynamicRegistryManager dynamicRegistryManager) {
+        ItemStack output = this.getOutput(dynamicRegistryManager).copy();
+        LinkedInventoryHelper.setItemChannel(LinkedInventoryHelper.getItemChannel(inv.getStack(4)), output);
         return output;
     }
 
