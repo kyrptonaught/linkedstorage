@@ -3,7 +3,6 @@ package net.kyrptonaught.linkedstorage.block;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.kyrptonaught.linkedstorage.LinkedStorageMod;
 import net.kyrptonaught.linkedstorage.network.OpenStoragePacket;
 import net.kyrptonaught.linkedstorage.network.SetDyePacket;
@@ -124,7 +123,7 @@ public class StorageBlock extends HorizontalFacingBlock implements BlockEntityPr
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlayerLookDirection().getOpposite());
+        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
     }
 
     public BlockRenderType getRenderType(BlockState blockState_1) {
